@@ -6,13 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-    @Query("SELECT t FROM Todo t where t.member.memberId = ?1")
-    List<Todo> findAllByMemberSeq(Long memberSeq);
+    @Query("SELECT t FROM Todo t where t.member.id = :id")
+    List<Todo> findByMemberId(Long id);
 
-    Optional<Todo> findByTodoSeq(Long todoSeq);
 }

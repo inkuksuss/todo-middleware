@@ -1,49 +1,56 @@
 package com.project.todo.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@AttributeOverrides({
-        @AttributeOverride(name="created", column = @Column(name = "MEMBER_CREATED")),
-        @AttributeOverride(name="updated", column = @Column(name = "MEMBER_UPDATED"))
-})
+//@AttributeOverrides({
+//        @AttributeOverride(name="created", column = @Column(name = "MEMBER_CREATED")),
+//        @AttributeOverride(name="updated", column = @Column(name = "MEMBER_UPDATED"))
+//})
+@SQLDelete(sql = "UPDATE member SET is_delete = false WHERE id = ?")
+@Where(clause = "is_delete = 'N'")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"id", "name", "email", "password"})
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBER_SEQ")
-    private Long memberSeq;
-    private String memberName;
-    private String memberId;
-    private String memberPassword;
-    private String memberEmail;
+    @Column(name = "MEMBER_ID")
+    private Long id;
+    private String name;
+    private String email;
+    private String password;
 
     @OneToMany(mappedBy = "member")
-    private List<Todo> todoList = new ArrayList<Todo>();
+    private List<Todo> todoList = new ArrayList<>();
 
-    public void setMemberSeq(Long memberSeq) {
-        this.memberSeq = memberSeq;
+    public Member(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setMemberPassword(String memberPassword) {
-        this.memberPassword = memberPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setMemberEmail(String memberEmail) {
-        this.memberEmail = memberEmail;
-    }
     public void addTodo(Todo todo) {
         this.todoList.add(todo);
         if (todo.getMember() != this) todo.setMember(this);
