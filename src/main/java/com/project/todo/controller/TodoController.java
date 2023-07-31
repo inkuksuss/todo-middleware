@@ -1,6 +1,11 @@
 package com.project.todo.controller;
 
 import com.project.todo.controller.request.AddTodoReq;
+import com.project.todo.controller.response.todo.AddTodoRes;
+import com.project.todo.domain.dto.MemberAndTodoDto;
+import com.project.todo.domain.dto.TodoDto;
+import com.project.todo.service.TodoService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,19 +13,22 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/todo")
 public class TodoController {
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addTodo(@RequestBody AddTodoReq addTodoReq) {
-      log.info("userId ={}", addTodoReq.toString());
+    private final TodoService todoService;
 
-      return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/save")
+    public ResponseEntity<AddTodoRes> addTodo(@RequestBody AddTodoReq addTodoReq) {
+        // TODO validation
+        MemberAndTodoDto dto = new MemberAndTodoDto();
+        dto.setMemberId(addTodoReq.getUserId());
+        dto.setTodoId(addTodoReq.getTodoId());
+        dto.setTodoContent(addTodoReq.getContent());
+
+        TodoDto todoDto = todoService.saveTodo(dto);
+
+        return new ResponseEntity<>(new AddTodoRes(dto.getMemberId(), todoDto), HttpStatus.OK);
     }
-
-//    @PostMapping("/remove")
-//    public ResponseEntity<?> removeTodo() {
-//
-//    }
-
 }

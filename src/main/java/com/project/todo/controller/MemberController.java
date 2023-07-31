@@ -1,6 +1,8 @@
 package com.project.todo.controller;
 
-import com.project.todo.controller.response.MemberDto;
+;
+import com.project.todo.controller.response.member.GetDefaultMemberRes;
+import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.entity.Member;
 import com.project.todo.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/get-default-member")
-    public ResponseEntity<MemberDto> getDefaultMember() {
-        Member defaultMember = memberService.findDefaultMember();
-        MemberDto memberDto = MemberDto.fromEntity(defaultMember);
+    public ResponseEntity<GetDefaultMemberRes> getDefaultMember() {
+        MemberDto defaultMember = memberService.findDefaultMember();
+        GetDefaultMemberRes memberDto = GetDefaultMemberRes.fromDto(defaultMember);
 
         return new ResponseEntity<>(memberDto, HttpStatus.OK);
     }

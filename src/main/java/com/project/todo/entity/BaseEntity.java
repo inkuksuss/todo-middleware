@@ -3,8 +3,6 @@ package com.project.todo.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -15,18 +13,22 @@ public abstract class BaseEntity {
     @Column(nullable = false, length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
     private String isDelete;
 
-    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime created;
 
-    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = true, columnDefinition = "TIMESTAMP")
     private LocalDateTime updated;
 
     @PrePersist
     void preInsert() {
         if (this.isDelete == null) this.isDelete = "N";
+        if (this.created == null) this.created = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        if (this.updated == null) this.updated = LocalDateTime.now();
     }
 }

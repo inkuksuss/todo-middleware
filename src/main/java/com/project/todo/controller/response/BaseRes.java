@@ -6,14 +6,14 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class BaseDto {
+public class BaseRes {
     private String isDelete;
 
     private LocalDateTime created;
 
     private LocalDateTime updated;
 
-    public BaseDto(String isDelete, LocalDateTime created, LocalDateTime updated) {
+    public BaseRes(String isDelete, LocalDateTime created, LocalDateTime updated) {
         this.isDelete = isDelete;
         this.created = created;
         this.updated = updated;
