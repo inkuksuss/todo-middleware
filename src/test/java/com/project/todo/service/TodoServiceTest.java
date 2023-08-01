@@ -41,7 +41,7 @@ class TodoServiceTest {
     }
 
     @Test
-    void noTodoAndUpdate() {
+    void insertTodo() {
         MemberDto testMember = new MemberDto();
         testMember.setName("test1");
         testMember.setEmail("test@naver.com");
@@ -63,6 +63,24 @@ class TodoServiceTest {
         Assertions.assertThat(savedTodo.getMemberId()).isEqualTo(savedMemberDto.getId());
         Assertions.assertThat(savedTodo.getCreated()).isNotNull();
         Assertions.assertThat(savedTodo.getUpdated()).isNull();
+    }
+
+    @Test
+    void updateTodo() {
+        MemberDto testMember = new MemberDto();
+        testMember.setName("test1");
+        testMember.setEmail("test@naver.com");
+        testMember.setPassword("1111");
+
+        MemberDto savedMemberDto = memberService.saveMember(testMember);
+
+        MemberAndTodoDto memberAndTodoDto = new MemberAndTodoDto();
+        memberAndTodoDto.setMemberId(savedMemberDto.getId());
+        memberAndTodoDto.setTodoTitle("test1");
+        memberAndTodoDto.setTodoType(TODO_TYPE.COMMON);
+        memberAndTodoDto.setTodoContent("test data");
+
+        TodoDto savedTodo = todoService.saveTodo(memberAndTodoDto);
 
         // do update
         MemberAndTodoDto updateDto = new MemberAndTodoDto();
