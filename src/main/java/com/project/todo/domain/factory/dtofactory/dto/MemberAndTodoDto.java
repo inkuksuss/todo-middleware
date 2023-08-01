@@ -1,11 +1,11 @@
-package com.project.todo.domain.dto;
+package com.project.todo.domain.factory.dtofactory.dto;
 
 import com.project.todo.domain.types.TODO_TYPE;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class MemberAndTodoDto {
+public class MemberAndTodoDto implements CustomDto {
 
     private Long memberId;
     private String memberName;

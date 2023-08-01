@@ -2,8 +2,8 @@ package com.project.todo.controller;
 
 import com.project.todo.controller.request.AddTodoReq;
 import com.project.todo.controller.response.todo.AddTodoRes;
-import com.project.todo.domain.dto.MemberAndTodoDto;
-import com.project.todo.domain.dto.TodoDto;
+import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
+import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
 import com.project.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;

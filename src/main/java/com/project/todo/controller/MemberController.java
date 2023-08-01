@@ -2,8 +2,7 @@ package com.project.todo.controller;
 
 ;
 import com.project.todo.controller.response.member.GetDefaultMemberRes;
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.entity.Member;
+import com.project.todo.domain.factory.dtofactory.dto.MemberDto;
 import com.project.todo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

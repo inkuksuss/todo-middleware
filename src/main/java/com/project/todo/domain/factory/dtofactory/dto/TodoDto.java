@@ -1,4 +1,4 @@
-package com.project.todo.domain.dto;
+package com.project.todo.domain.factory.dtofactory.dto;
 
 import com.project.todo.domain.types.TODO_TYPE;
 import com.project.todo.entity.Todo;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @ToString
-public class TodoDto {
+public class TodoDto implements CustomDto {
 
     private Long memberId;
     private Long todoId;

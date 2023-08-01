@@ -1,8 +1,8 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.MemberAndTodoDto;
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.dto.TodoDto;
+import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
+import com.project.todo.domain.factory.dtofactory.dto.MemberDto;
+import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

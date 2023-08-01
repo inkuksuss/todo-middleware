@@ -1,6 +1,5 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.entity.Member;
 import com.project.todo.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @SpringBootTest
+@Transactional
 class MemberServiceTest {
 
     @Autowired MemberService memberService;
@@ -33,6 +33,12 @@ class MemberServiceTest {
         Optional<Member> testMember = memberRepository.findByName("test1");
         System.out.println("3");
         Assertions.assertThat(testMember.get().getName()).isEqualTo("test1");
+    }
+
+    @Test
+    void testTx() {
+        Member newMember = new Member("test1", "test1@naver.com", "1111");
+        memberService.testMember(newMember);
     }
 
 }

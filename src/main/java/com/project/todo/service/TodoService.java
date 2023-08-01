@@ -1,7 +1,7 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.MemberAndTodoDto;
-import com.project.todo.domain.dto.TodoDto;
+import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
+import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
 import com.project.todo.entity.Member;
 import com.project.todo.entity.Todo;

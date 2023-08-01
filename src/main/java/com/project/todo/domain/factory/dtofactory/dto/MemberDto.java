@@ -1,4 +1,4 @@
-package com.project.todo.domain.dto;
+package com.project.todo.domain.factory.dtofactory.dto;
 
 import com.project.todo.entity.Member;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Getter @Setter
 @NoArgsConstructor
 @ToString
-public class MemberDto {
+public class MemberDto implements CustomDto {
 
     private Long id;
     private String name;

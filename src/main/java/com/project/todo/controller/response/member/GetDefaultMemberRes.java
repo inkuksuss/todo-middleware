@@ -1,9 +1,8 @@
 package com.project.todo.controller.response.member;
 
 import com.project.todo.controller.response.BaseRes;
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.dto.TodoDto;
-import com.project.todo.entity.Todo;
+import com.project.todo.domain.factory.dtofactory.dto.MemberDto;
+import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

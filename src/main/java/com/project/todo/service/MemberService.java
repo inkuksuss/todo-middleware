@@ -1,8 +1,9 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.domain.factory.dtofactory.dto.MemberDto;
 import com.project.todo.entity.Member;
 import com.project.todo.repository.MemberRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final EntityManager em;
 
     @Transactional
     public MemberDto findDefaultMember() {
@@ -33,6 +35,21 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
 
         return MemberDto.fromEntity(savedMember);
+    }
+
+    @Transactional
+    public MemberDto testMember(Member member) {
+        log.info("tx start");
+        Member savedMember = memberRepository.save(member);
+        log.info("save member");
+
+        em.clear();
+
+        Optional<Member> findMember = memberRepository.findById(savedMember.getId());
+
+        log.info("find member");
+
+        return MemberDto.fromEntity(findMember.get());
     }
 
     private Member createDefaultMember() {
