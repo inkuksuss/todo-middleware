@@ -10,16 +10,16 @@ public class MemberAndTodoDtoFactory<T extends RequestObejct> implements DtoFact
 
     @Override
     public CustomDto createDto(T request) {
-        MemberAndTodoDto dto = null;
-        if (request instanceof AddTodoReq) {
-            AddTodoReq addTodoReq = (AddTodoReq) request;
-            dto = new MemberAndTodoDto();
-            dto.setMemberId(addTodoReq.getUserId());
-            dto.setTodoId(addTodoReq.getTodoId());
-            dto.setTodoType(TODO_TYPE.COMMON);
-            dto.setTodoTitle(addTodoReq.getTodoTitle());
-            dto.setTodoContent(addTodoReq.getContent());
-        }
+
+        if (!AddTodoReq.class.isAssignableFrom(request.getClass())) return null;
+
+        AddTodoReq addTodoReq = (AddTodoReq) request;
+        MemberAndTodoDto dto = new MemberAndTodoDto();
+        dto.setMemberId(addTodoReq.getUserId());
+        dto.setTodoId(addTodoReq.getTodoId());
+        dto.setTodoType(TODO_TYPE.COMMON);
+        dto.setTodoTitle(addTodoReq.getTodoTitle());
+        dto.setTodoContent(addTodoReq.getContent());
 
         return dto;
     }

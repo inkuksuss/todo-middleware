@@ -29,8 +29,8 @@ public class MemberController {
         return new ResponseEntity<>(memberDto, HttpStatus.OK);
     }
 
-    @PostMapping("/test")
-    public String test() {
-        return "test";
+    @PostMapping("/get-member")
+    public ResponseEntity<?> getMember() {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

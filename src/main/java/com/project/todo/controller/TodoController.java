@@ -2,6 +2,7 @@ package com.project.todo.controller;
 
 import com.project.todo.controller.request.AddTodoReq;
 import com.project.todo.controller.response.todo.AddTodoRes;
+import com.project.todo.domain.factory.dtofactory.DtoFactory;
 import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
 import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
@@ -34,4 +35,12 @@ public class TodoController {
 
         return new ResponseEntity<>(new AddTodoRes(dto.getMemberId(), todoDto), HttpStatus.OK);
     }
+
+//    @PostMapping("/remove/{todoId}")
+//    public ResponseEntity<AddTodoRes> addTodo(@PathVariable Long todoId) {
+//
+//        TodoDto todoDto = todoService.saveTodo(dto);
+//
+//        return new ResponseEntity<>(new AddTodoRes(dto.getMemberId(), todoDto), HttpStatus.OK);
+//    }
 }
