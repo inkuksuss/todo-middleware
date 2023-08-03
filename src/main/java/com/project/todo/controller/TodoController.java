@@ -1,6 +1,7 @@
 package com.project.todo.controller;
 
 import com.project.todo.controller.request.AddTodoReq;
+import com.project.todo.controller.request.TodoDetailRequest;
 import com.project.todo.controller.response.todo.AddTodoRes;
 import com.project.todo.domain.factory.dtofactory.DtoFactory;
 import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
@@ -22,14 +23,15 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("/save")
-    public ResponseEntity<AddTodoRes> addTodo(@RequestBody AddTodoReq addTodoReq) {
+    public ResponseEntity<AddTodoRes> addTodo(@RequestBody TodoDetailRequest request) {
         // TODO validation
+
         MemberAndTodoDto dto = new MemberAndTodoDto();
-        dto.setMemberId(addTodoReq.getUserId());
-        dto.setTodoId(addTodoReq.getTodoId());
+        dto.setMemberId(request.memberId());
+        dto.setTodoId(request.todoId());
         dto.setTodoType(TODO_TYPE.COMMON);
-        dto.setTodoTitle(addTodoReq.getTodoTitle());
-        dto.setTodoContent(addTodoReq.getContent());
+        dto.setTodoTitle(request.title());
+        dto.setTodoContent(request.content());
 
         TodoDto todoDto = todoService.saveTodo(dto);
 

@@ -47,7 +47,7 @@ class TodoServiceTest {
         testMember.setEmail("test@naver.com");
         testMember.setPassword("1111");
 
-        MemberDto savedMemberDto = memberService.saveMember(testMember);
+        MemberDto savedMemberDto = memberService.doJoin(testMember);
 
         MemberAndTodoDto memberAndTodoDto = new MemberAndTodoDto();
         memberAndTodoDto.setMemberId(savedMemberDto.getId());
@@ -72,7 +72,7 @@ class TodoServiceTest {
         testMember.setEmail("test@naver.com");
         testMember.setPassword("1111");
 
-        MemberDto savedMemberDto = memberService.saveMember(testMember);
+        MemberDto savedMemberDto = memberService.doJoin(testMember);
 
         MemberAndTodoDto memberAndTodoDto = new MemberAndTodoDto();
         memberAndTodoDto.setMemberId(savedMemberDto.getId());

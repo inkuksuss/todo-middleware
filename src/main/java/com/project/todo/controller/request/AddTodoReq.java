@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class AddTodoReq implements RequestObejct {
+public class AddTodoReq implements RequestObject {
     private final Long userId;
     private final Long todoId;
     private final String todoTitle;

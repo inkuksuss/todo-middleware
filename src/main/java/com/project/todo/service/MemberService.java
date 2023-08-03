@@ -2,8 +2,10 @@ package com.project.todo.service;
 
 import com.project.todo.domain.factory.dtofactory.dto.MemberDto;
 import com.project.todo.entity.Member;
+import com.project.todo.exception.DuplicateEmailException;
+import com.project.todo.exception.NoMatchPasswordException;
+import com.project.todo.exception.NotFoundMemberException;
 import com.project.todo.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,51 +13,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final EntityManager em;
 
     @Transactional
-    public MemberDto findDefaultMember() {
-        Optional<Member> defaultMember = memberRepository.findByName("테스트 유저");
+    public MemberDto doJoin(MemberDto memberDto) {
 
-        Member member = defaultMember.orElseGet(this::createDefaultMember);
+        Optional<Member> sameNameMember = memberRepository.findByName(memberDto.getName());
+        sameNameMember.orElseThrow(() -> new DuplicateEmailException("duplicate name"));
 
-        return MemberDto.fromEntity(member);
-    }
-
-    @Transactional
-    public MemberDto saveMember(MemberDto memberDto) {
+        // need encrypt
         Member member = new Member(memberDto.getName(), memberDto.getEmail(), memberDto.getPassword());
-
         Member savedMember = memberRepository.save(member);
 
         return MemberDto.fromEntity(savedMember);
     }
 
-    @Transactional
-    public MemberDto testMember(Member member) {
-        log.info("tx start");
-        Member savedMember = memberRepository.save(member);
-        log.info("save member");
+    public MemberDto doLogin(MemberDto memberDto) {
 
-        em.clear();
+        Optional<Member> findMember = memberRepository.findByEmail(memberDto.getName());
+        Member member = findMember.orElseThrow(NotFoundMemberException::new);
 
-        Optional<Member> findMember = memberRepository.findById(savedMember.getId());
+        if (!member.getPassword().equals(memberDto.getPassword())) {
+            throw new NoMatchPasswordException();
+        }
 
-        log.info("find member");
-
-        return MemberDto.fromEntity(findMember.get());
+        return MemberDto.fromEntity(member);
     }
-
-    private Member createDefaultMember() {
-        Member defaultMember = new Member("테스트 유저", "default@naver.com", "1111");
-
-        return memberRepository.save(defaultMember);
-    };
-
 }

@@ -1,4 +1,4 @@
-package com.project.todo.entity;
+package com.project.todo.domain.entity;
 
 import com.project.todo.domain.types.TODO_TYPE;
 import jakarta.persistence.*;
@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
