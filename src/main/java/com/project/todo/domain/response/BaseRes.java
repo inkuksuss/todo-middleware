@@ -1,4 +1,4 @@
-package com.project.todo.controller.response;
+package com.project.todo.domain.response;
 
 
 import lombok.Getter;

@@ -1,7 +1,8 @@
-package com.project.todo.controller.advice;
+package com.project.todo.exception.advice;
 
 
-import com.project.todo.controller.advice.handler.ErrorResult;
+import com.project.todo.domain.response.common.RESPONSE_CODE;
+import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.exception.NoMatchPasswordException;
 import com.project.todo.exception.NotFoundMemberException;
@@ -17,29 +18,29 @@ public class ExceptionAdvice {
 
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(DuplicateEmailException.class)
-    public ErrorResult duplicateEmailHandler(DuplicateEmailException e) {
+    public ResponseResult<Void> duplicateEmailHandler(DuplicateEmailException e) {
         log.error("[ex handler] ex", e);
-        return new ErrorResult(1, "DuplicateEmailException");
+        return new ResponseResult<>(RESPONSE_CODE.DUPLICATE_EMAIL, "DuplicateEmailException");
     }
 
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(NoMatchPasswordException.class)
-    public ErrorResult noMatchPasswordHandler(NoMatchPasswordException e) {
+    public ResponseResult<Void> noMatchPasswordHandler(NoMatchPasswordException e) {
         log.error("[ex handler] ex", e);
-        return new ErrorResult(1, "NoMatchPasswordException");
+        return new ResponseResult<>(RESPONSE_CODE.NO_MATCH_PASSWORD, "NoMatchPasswordException");
     }
 
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(NotFoundMemberException.class)
-    public ErrorResult notFoundMemberHandler(NotFoundMemberException e) {
+    public ResponseResult<Void> notFoundMemberHandler(NotFoundMemberException e) {
         log.error("[ex handler] ex", e);
-        return new ErrorResult(1, "NotFoundMemberException");
+        return new ResponseResult<>(RESPONSE_CODE.NOT_FOUND_MEMBER, "NotFoundMemberException");
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
-    public ErrorResult exHandler(Exception e) {
+    public ResponseResult<Void> exHandler(Exception e) {
         log.error("[ex handler] ex", e);
-        return new ErrorResult(1, "Exception");
+        return new ResponseResult<>(RESPONSE_CODE.EXCEPTION, "Exception");
     }
 }

@@ -1,4 +1,4 @@
-package com.project.todo.controller.response.todo;
+package com.project.todo.domain.response.todo;
 
 import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;

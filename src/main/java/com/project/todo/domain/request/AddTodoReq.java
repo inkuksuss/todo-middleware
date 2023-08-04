@@ -1,4 +1,4 @@
-package com.project.todo.controller.request;
+package com.project.todo.domain.request;
 
 import lombok.Getter;
 import lombok.ToString;

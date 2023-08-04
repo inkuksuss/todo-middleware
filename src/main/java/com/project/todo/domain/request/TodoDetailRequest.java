@@ -1,4 +1,4 @@
-package com.project.todo.controller.request;
+package com.project.todo.domain.request;
 
 import com.project.todo.domain.types.TODO_TYPE;
 import jakarta.validation.constraints.NotNull;

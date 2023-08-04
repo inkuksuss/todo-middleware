@@ -1,4 +1,4 @@
-package com.project.todo.controller.response;
+package com.project.todo.domain.response;
 
 import com.project.todo.domain.types.TODO_TYPE;
 import lombok.Getter;

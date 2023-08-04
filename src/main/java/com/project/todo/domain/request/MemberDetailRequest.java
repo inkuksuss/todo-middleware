@@ -1,4 +1,4 @@
-package com.project.todo.controller.request;
+package com.project.todo.domain.request;
 
 import jakarta.validation.constraints.Email;
 

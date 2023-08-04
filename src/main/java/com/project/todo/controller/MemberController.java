@@ -1,9 +1,8 @@
 package com.project.todo.controller;
 
-;
-import com.project.todo.controller.request.MemberDetailRequest;
-import com.project.todo.controller.response.MemberDetailResponse;
 import com.project.todo.domain.factory.dtofactory.dto.MemberDto;
+import com.project.todo.domain.request.MemberDetailRequest;
+import com.project.todo.domain.response.MemberDetailResponse;
 import com.project.todo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
