@@ -1,7 +1,7 @@
 package com.project.todo.domain.factory.dtofactory;
 
-import com.project.todo.controller.request.RequestObject;
 import com.project.todo.domain.factory.dtofactory.dto.CustomDto;
+import com.project.todo.domain.request.RequestObject;
 
 public interface DtoFactory<T extends RequestObject> {
 

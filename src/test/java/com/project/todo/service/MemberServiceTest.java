@@ -1,7 +1,11 @@
 package com.project.todo.service;
 
-import com.project.todo.entity.Member;
+import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.exception.DuplicateEmailException;
+import com.project.todo.exception.NoMatchPasswordException;
+import com.project.todo.exception.NotFoundMemberException;
 import com.project.todo.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
+
+@Slf4j
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
@@ -18,27 +25,75 @@ class MemberServiceTest {
     @Autowired MemberRepository memberRepository;
 
     @Test
-    void hasTx() {
-        Member member = new Member("test1", "test@naver.com", "1111");
-        memberRepository.save(member);
+    void doJoin() {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName("test");
+        memberDto.setPassword("111");
+        memberDto.setEmail("test");
+
+        MemberDto saveMember = memberService.doJoin(memberDto);
+
+        assertThat(memberDto.getName()).isEqualTo(saveMember.getName());
+        assertThat(memberDto.getEmail()).isEqualTo(saveMember.getEmail());
+        assertThat(saveMember.getPassword()).isNull();
     }
 
     @Test
-    void crudHasFindByName() {
-        Member member = new Member("test1", "test@naver.com", "1111");
-        System.out.println("1");
-        memberRepository.save(member);
-        System.out.println("2");
+    void duplicateEmail() {
+        MemberDto memberDto1 = new MemberDto();
+        memberDto1.setName("test");
+        memberDto1.setPassword("111");
+        memberDto1.setEmail("test");
 
-        Optional<Member> testMember = memberRepository.findByName("test1");
-        System.out.println("3");
-        Assertions.assertThat(testMember.get().getName()).isEqualTo("test1");
+        MemberDto saveMember = memberService.doJoin(memberDto1);
+
+        MemberDto memberDto2 = new MemberDto();
+        memberDto2.setName("asdasd");
+        memberDto2.setPassword("111");
+        memberDto2.setEmail("test");
+
+        assertThatThrownBy(() -> memberService.doJoin(memberDto2)).isInstanceOf(DuplicateEmailException.class);
     }
 
     @Test
-    void testTx() {
-        Member newMember = new Member("test1", "test1@naver.com", "1111");
-        memberService.testMember(newMember);
+    void dologin() {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName("test");
+        memberDto.setPassword("111");
+        memberDto.setEmail("test");
+
+        MemberDto saveMember = memberService.doJoin(memberDto);
+
+        saveMember.setPassword(memberDto.getPassword());
+        MemberDto loginMember = memberService.doLogin(saveMember);
+
+        assertThat(loginMember.getId()).isEqualTo(saveMember.getId());
     }
 
+    @Test
+    void noEmailLogin() {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName("test");
+        memberDto.setPassword("111");
+        memberDto.setEmail("test");
+
+        MemberDto saveMember = memberService.doJoin(memberDto);
+
+        saveMember.setEmail("wrong");
+        saveMember.setPassword(memberDto.getPassword());
+        assertThatThrownBy(() -> memberService.doLogin(saveMember)).isInstanceOf(NotFoundMemberException.class);
+    }
+
+    @Test
+    void notMatchPasswordLogin() {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName("test");
+        memberDto.setPassword("111");
+        memberDto.setEmail("test");
+
+        MemberDto saveMember = memberService.doJoin(memberDto);
+
+        saveMember.setPassword("wrong");
+        assertThatThrownBy(() -> memberService.doLogin(saveMember)).isInstanceOf(NoMatchPasswordException.class);
+    }
 }

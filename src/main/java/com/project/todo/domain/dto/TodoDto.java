@@ -1,7 +1,7 @@
 package com.project.todo.domain.dto;
 
 import com.project.todo.domain.types.TODO_TYPE;
-import com.project.todo.entity.Todo;
+import com.project.todo.domain.entity.Todo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @ToString
-public class TodoDto implements CustomDto {
+public class TodoDto {
 
     private Long memberId;
     private Long todoId;

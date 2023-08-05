@@ -1,6 +1,6 @@
 package com.project.todo.domain.response.todo;
 
-import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
+import com.project.todo.domain.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.project.todo.controller;
 
-import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
-import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
+import com.project.todo.domain.dto.MemberAndTodoDto;
+import com.project.todo.domain.dto.TodoDto;
 import com.project.todo.domain.request.TodoDetailRequest;
 import com.project.todo.domain.response.todo.AddTodoRes;
 import com.project.todo.domain.types.TODO_TYPE;

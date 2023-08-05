@@ -5,20 +5,21 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-//@SQLDelete(sql = "UPDATE member SET is_delete = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET is_delete = false WHERE id = ?")
 @Where(clause = "is_delete = 'N'")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"id", "name", "email", "password"})
+@ToString(of = { "id", "name", "email", "password" })
 public class Member extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_ID")
     private Long id;
 

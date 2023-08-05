@@ -1,24 +1,29 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
-import com.project.todo.domain.factory.dtofactory.dto.MemberDto;
-import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
+import com.project.todo.domain.dto.MemberAndTodoDto;
+import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.domain.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
+import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
-@Rollback(value = false)
+@Transactional
 class TodoServiceTest {
 
     @Autowired TodoService todoService;
     @Autowired MemberService memberService;
+    @Autowired
+    EntityManager em;
 
     @Test
     void nullMember() {
@@ -99,5 +104,11 @@ class TodoServiceTest {
         Assertions.assertThat(updateTodo.getMemberId()).isEqualTo(savedTodo.getMemberId());
         Assertions.assertThat(updateTodo.getTodoId()).isEqualTo(savedTodo.getTodoId());
         Assertions.assertThat(savedTodo.getCreated()).isEqualTo(updateTodo.getCreated());
+
+        em.flush();
+        em.clear();
+
+        TodoDto todo = todoService.findTodo(updateTodo.getTodoId());
+        log.info("todo = {}", todo);
     }
 }

@@ -1,6 +1,8 @@
 package com.project.todo.domain.dto;
 
-import com.project.todo.entity.Member;
+import com.project.todo.domain.entity.Member;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,16 +16,23 @@ import java.util.stream.Collectors;
 @Getter @Setter
 @NoArgsConstructor
 @ToString
-public class MemberDto implements CustomDto {
+public class MemberDto {
 
     private Long id;
+
     private String name;
+
+    @Email
     private String email;
+
     private String password;
+
     private List<TodoDto> todoList = new ArrayList<>();
 
     private String isDelete;
+
     private LocalDateTime created;
+
     private LocalDateTime updated;
 
     public static MemberDto fromEntity(Member member) {

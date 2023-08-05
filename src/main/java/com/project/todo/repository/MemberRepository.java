@@ -1,7 +1,6 @@
 package com.project.todo.repository;
 
-import com.project.todo.entity.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.project.todo.domain.entity.Member;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

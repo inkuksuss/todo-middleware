@@ -1,10 +1,10 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.factory.dtofactory.dto.MemberAndTodoDto;
-import com.project.todo.domain.factory.dtofactory.dto.TodoDto;
+import com.project.todo.domain.dto.MemberAndTodoDto;
+import com.project.todo.domain.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
-import com.project.todo.entity.Member;
-import com.project.todo.entity.Todo;
+import com.project.todo.domain.entity.Member;
+import com.project.todo.domain.entity.Todo;
 import com.project.todo.repository.MemberRepository;
 import com.project.todo.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class TodoService {
 
     private final TodoRepository todoRepository;
@@ -53,7 +54,6 @@ public class TodoService {
         return TodoDto.fromEntity(savedTodo);
     }
 
-    @Transactional
     public TodoDto findTodo(Long id) {
         Optional<Todo> todo = todoRepository.findById(id);
         return TodoDto.fromEntity(todo.get());

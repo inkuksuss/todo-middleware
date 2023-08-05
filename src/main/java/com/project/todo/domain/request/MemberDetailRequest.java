@@ -8,5 +8,4 @@ public record MemberDetailRequest(
         String name,
         @Email String email,
         String password) {
-
 }

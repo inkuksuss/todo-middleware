@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class MemberAndTodoDto implements CustomDto {
+public class MemberAndTodoDto {
 
     private Long memberId;
     private String memberName;
