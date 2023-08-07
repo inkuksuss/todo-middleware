@@ -3,6 +3,7 @@ package com.project.todo.controller;
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.request.MemberDetailRequest;
 import com.project.todo.domain.response.MemberDetailResponse;
+import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +25,14 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<MemberDetailResponse> login(@Validated @RequestBody MemberDetailRequest request) {
+    public ResponseEntity<ResponseResult<MemberDetailResponse>> login(@Validated @RequestBody MemberDetailRequest request) {
+
+        log.info("Request = {}", request.toString());
 
         //create join dto
         MemberDto memberDto = new MemberDto();
-        memberDto.setEmail(request.email());
-        memberDto.setPassword(request.password());
+        memberDto.setEmail(request.getEmail());
+        memberDto.setPassword(request.getPassword());
 
         MemberDto loginMember = memberService.doLogin(memberDto);
 
@@ -41,20 +44,20 @@ public class MemberController {
         response.setCreated(loginMember.getCreated());
         response.setUpdated(loginMember.getUpdated());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseResult<>(response), HttpStatus.OK);
     }
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@Validated @RequestBody MemberDetailRequest request) {
+    public ResponseEntity<ResponseResult<Void>> join(@Validated @RequestBody MemberDetailRequest request) {
 
         //create join dto
         MemberDto memberDto = new MemberDto();
-        memberDto.setName(request.name());
-        memberDto.setEmail(request.email());
-        memberDto.setPassword(request.password());
+        memberDto.setName(request.getName());
+        memberDto.setEmail(request.getEmail());
+        memberDto.setPassword(request.getPassword());
 
         memberService.doJoin(memberDto);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseResult<>(), HttpStatus.OK);
     }
 }

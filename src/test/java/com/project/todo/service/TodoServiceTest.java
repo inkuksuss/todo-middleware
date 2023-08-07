@@ -1,6 +1,5 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.MemberAndTodoDto;
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
@@ -27,20 +26,20 @@ class TodoServiceTest {
 
     @Test
     void nullMember() {
-        MemberAndTodoDto dto = new MemberAndTodoDto();
+        TodoDto dto = new TodoDto();
         dto.setMemberId(null);
         dto.setTodoId(1L);
-        dto.setTodoContent("hello");
+        dto.setContent("hello");
 
         assertThrows(InvalidDataAccessApiUsageException.class, () -> todoService.saveTodo(dto));
     }
 
     @Test
     void noExistedMember() {
-        MemberAndTodoDto dto = new MemberAndTodoDto();
+        TodoDto dto = new TodoDto();
         dto.setMemberId(1L);
         dto.setTodoId(1L);
-        dto.setTodoContent("hello");
+        dto.setContent("hello");
 
         assertThrows(IllegalStateException.class, () -> todoService.saveTodo(dto));
     }
@@ -54,11 +53,11 @@ class TodoServiceTest {
 
         MemberDto savedMemberDto = memberService.doJoin(testMember);
 
-        MemberAndTodoDto memberAndTodoDto = new MemberAndTodoDto();
+        TodoDto memberAndTodoDto = new TodoDto();
         memberAndTodoDto.setMemberId(savedMemberDto.getId());
-        memberAndTodoDto.setTodoTitle("test1");
-        memberAndTodoDto.setTodoType(TODO_TYPE.COMMON);
-        memberAndTodoDto.setTodoContent("test data");
+        memberAndTodoDto.setTitle("test1");
+        memberAndTodoDto.setType(TODO_TYPE.COMMON);
+        memberAndTodoDto.setContent("test data");
 
         TodoDto savedTodo = todoService.saveTodo(memberAndTodoDto);
 
@@ -79,21 +78,21 @@ class TodoServiceTest {
 
         MemberDto savedMemberDto = memberService.doJoin(testMember);
 
-        MemberAndTodoDto memberAndTodoDto = new MemberAndTodoDto();
+        TodoDto memberAndTodoDto = new TodoDto();
         memberAndTodoDto.setMemberId(savedMemberDto.getId());
-        memberAndTodoDto.setTodoTitle("test1");
-        memberAndTodoDto.setTodoType(TODO_TYPE.COMMON);
-        memberAndTodoDto.setTodoContent("test data");
+        memberAndTodoDto.setTitle("test1");
+        memberAndTodoDto.setType(TODO_TYPE.COMMON);
+        memberAndTodoDto.setContent("test data");
 
         TodoDto savedTodo = todoService.saveTodo(memberAndTodoDto);
 
         // do update
-        MemberAndTodoDto updateDto = new MemberAndTodoDto();
+        TodoDto updateDto = new TodoDto();
         updateDto.setMemberId(savedMemberDto.getId());
         updateDto.setTodoId(savedTodo.getTodoId());
-        updateDto.setTodoTitle("test2");
-        updateDto.setTodoType(TODO_TYPE.COMMON);
-        updateDto.setTodoContent("test data2");
+        updateDto.setTitle("test2");
+        updateDto.setType(TODO_TYPE.COMMON);
+        updateDto.setContent("test data2");
 
         TodoDto updateTodo = todoService.saveTodo(updateDto);
 

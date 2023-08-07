@@ -13,10 +13,12 @@ public class ResponseResult<T> {
     private T data;
 
     public ResponseResult() {
+        this.code = RESPONSE_CODE.SUCCESS.getCode();
     }
 
-    public ResponseResult(RESPONSE_CODE code) {
-        this.code = code.getCode();
+    public ResponseResult(T t) {
+        this.code = RESPONSE_CODE.SUCCESS.getCode();
+        this.data = t;
     }
 
     public ResponseResult(RESPONSE_CODE code, String meesage) {

@@ -1,6 +1,5 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.MemberAndTodoDto;
 import com.project.todo.domain.dto.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
 import com.project.todo.domain.entity.Member;
@@ -12,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -24,28 +24,29 @@ public class TodoService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public TodoDto saveTodo(MemberAndTodoDto dto) {
+    public TodoDto saveTodo(TodoDto todoDto) {
 
-        Optional<Member> findMember = memberRepository.findById(dto.getMemberId());
+        Optional<Member> findMember = memberRepository.findById(todoDto.getMemberId());
 
         // NotFoundMember
         Member member = findMember.orElseThrow(IllegalStateException::new);
 
         Todo savedTodo = null;
 
-        if (dto.getTodoId() != null) {
-            Optional<Todo> findTodo = todoRepository.findById(dto.getTodoId());
+        if (todoDto.getTodoId() != null) {
+            Optional<Todo> findTodo = todoRepository.findById(todoDto.getTodoId());
 
             // NotfoundTodo
             Todo todo = findTodo.orElseThrow(IllegalStateException::new);
-            todo.setType(dto.getTodoType());
-            todo.setTitle(dto.getTodoTitle());
-            todo.setContent(dto.getTodoContent());
+            todo.setType(todoDto.getType());
+            todo.setTitle(todoDto.getTitle());
+            todo.setContent(todoDto.getContent());
             todo.setMember(member);
 
             savedTodo = todoRepository.save(todo);
         } else {
-            Todo newTodo = new Todo(TODO_TYPE.COMMON, dto.getTodoTitle(), dto.getTodoContent());
+            Todo newTodo = new Todo(TODO_TYPE.COMMON, todoDto.getTitle(), todoDto.getContent());
+
             newTodo.setMember(member);
 
             savedTodo = todoRepository.save(newTodo);
@@ -55,7 +56,9 @@ public class TodoService {
     }
 
     public TodoDto findTodo(Long id) {
-        Optional<Todo> todo = todoRepository.findById(id);
-        return TodoDto.fromEntity(todo.get());
+        Todo todo = todoRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
+
+        return TodoDto.fromEntity(todo);
     }
 }

@@ -2,7 +2,6 @@ package com.project.todo.domain.dto;
 
 import com.project.todo.domain.entity.Member;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -56,7 +56,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void dologin() {
+    void doLogin() {
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
         memberDto.setPassword("111");

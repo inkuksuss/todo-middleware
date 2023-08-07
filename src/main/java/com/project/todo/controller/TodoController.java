@@ -1,6 +1,5 @@
 package com.project.todo.controller;
 
-import com.project.todo.domain.dto.MemberAndTodoDto;
 import com.project.todo.domain.dto.TodoDto;
 import com.project.todo.domain.request.TodoDetailRequest;
 import com.project.todo.domain.response.todo.AddTodoRes;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -21,15 +21,15 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("/save")
-    public ResponseEntity<AddTodoRes> addTodo(@RequestBody TodoDetailRequest request) {
+    public ResponseEntity<AddTodoRes> addTodo(@RequestBody @Validated TodoDetailRequest request) {
         // TODO validation
 
-        MemberAndTodoDto dto = new MemberAndTodoDto();
+        TodoDto dto = new TodoDto();
         dto.setMemberId(request.memberId());
         dto.setTodoId(request.todoId());
-        dto.setTodoType(TODO_TYPE.COMMON);
-        dto.setTodoTitle(request.title());
-        dto.setTodoContent(request.content());
+        dto.setType(TODO_TYPE.COMMON);
+        dto.setTitle(request.title());
+        dto.setContent(request.content());
 
         TodoDto todoDto = todoService.saveTodo(dto);
 

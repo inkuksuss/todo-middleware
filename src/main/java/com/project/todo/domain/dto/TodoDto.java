@@ -10,18 +10,26 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-@NoArgsConstructor
 @ToString
 public class TodoDto {
 
     private Long memberId;
+
     private Long todoId;
+
     private TODO_TYPE type;
+
     private String title;
+
     private String content;
+
     private String isDelete;
+
     private LocalDateTime created;
+
     private LocalDateTime updated;
+
+    public TodoDto() {}
 
     public static TodoDto fromEntity(Todo todo) {
         TodoDto todoDto = new TodoDto();
