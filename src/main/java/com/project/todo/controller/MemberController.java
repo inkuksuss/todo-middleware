@@ -1,6 +1,8 @@
 package com.project.todo.controller;
 
 import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.domain.request.JoinRequest;
+import com.project.todo.domain.request.LoginRequest;
 import com.project.todo.domain.request.MemberDetailRequest;
 import com.project.todo.domain.response.MemberDetailResponse;
 import com.project.todo.domain.response.common.ResponseResult;
@@ -25,16 +27,10 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseResult<MemberDetailResponse>> login(@Validated @RequestBody MemberDetailRequest request) {
+    public ResponseEntity<ResponseResult<MemberDetailResponse>> login(@Validated @RequestBody LoginRequest request) {
 
         log.info("Request = {}", request.toString());
-
-        //create join dto
-        MemberDto memberDto = new MemberDto();
-        memberDto.setEmail(request.getEmail());
-        memberDto.setPassword(request.getPassword());
-
-        MemberDto loginMember = memberService.doLogin(memberDto);
+        MemberDto loginMember = memberService.doLogin(request.getEmail(), request.getPassword());
 
         // create response
         MemberDetailResponse response = new MemberDetailResponse();
@@ -48,7 +44,7 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseResult<Void>> join(@Validated @RequestBody MemberDetailRequest request) {
+    public ResponseEntity<ResponseResult<Void>> join(@Validated @RequestBody JoinRequest request) {
 
         //create join dto
         MemberDto memberDto = new MemberDto();

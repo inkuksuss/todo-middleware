@@ -65,7 +65,7 @@ class MemberServiceTest {
         MemberDto saveMember = memberService.doJoin(memberDto);
 
         saveMember.setPassword(memberDto.getPassword());
-        MemberDto loginMember = memberService.doLogin(saveMember);
+        MemberDto loginMember = memberService.doLogin(saveMember.getEmail(), saveMember.getPassword());
 
         assertThat(loginMember.getId()).isEqualTo(saveMember.getId());
     }
@@ -81,7 +81,7 @@ class MemberServiceTest {
 
         saveMember.setEmail("wrong");
         saveMember.setPassword(memberDto.getPassword());
-        assertThatThrownBy(() -> memberService.doLogin(saveMember)).isInstanceOf(NotFoundMemberException.class);
+        assertThatThrownBy(() -> memberService.doLogin(saveMember.getEmail(), saveMember.getPassword())).isInstanceOf(NotFoundMemberException.class);
     }
 
     @Test
@@ -94,6 +94,6 @@ class MemberServiceTest {
         MemberDto saveMember = memberService.doJoin(memberDto);
 
         saveMember.setPassword("wrong");
-        assertThatThrownBy(() -> memberService.doLogin(saveMember)).isInstanceOf(NoMatchPasswordException.class);
+        assertThatThrownBy(() -> memberService.doLogin(saveMember.getEmail(), saveMember.getPassword())).isInstanceOf(NoMatchPasswordException.class);
     }
 }

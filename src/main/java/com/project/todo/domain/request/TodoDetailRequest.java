@@ -2,13 +2,17 @@ package com.project.todo.domain.request;
 
 import com.project.todo.domain.types.TODO_TYPE;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
-public record TodoDetailRequest(
+@Getter
+public class TodoDetailRequest {
 
-        Long memberId,
-        @NotNull Long todoId,
-        TODO_TYPE type,
-        String title,
-        String content) {
+    private Long memberId;
+    private @NotNull Long todoId;
+    private TODO_TYPE type;
+    private String title;
+    private String content;
+
+
 
 }

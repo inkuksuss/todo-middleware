@@ -25,11 +25,11 @@ public class TodoController {
         // TODO validation
 
         TodoDto dto = new TodoDto();
-        dto.setMemberId(request.memberId());
-        dto.setTodoId(request.todoId());
+        dto.setMemberId(request.getMemberId());
+        dto.setTodoId(request.getTodoId());
         dto.setType(TODO_TYPE.COMMON);
-        dto.setTitle(request.title());
-        dto.setContent(request.content());
+        dto.setTitle(request.getTitle());
+        dto.setContent(request.getContent());
 
         TodoDto todoDto = todoService.saveTodo(dto);
 

@@ -6,6 +6,7 @@ public enum RESPONSE_CODE {
     DUPLICATE_EMAIL(1),
     NO_MATCH_PASSWORD(2),
     NOT_FOUND_MEMBER(3),
+    INVALID_PARAMETER(4),
     EXCEPTION(99);
 
     private final int code;

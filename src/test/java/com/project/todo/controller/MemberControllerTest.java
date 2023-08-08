@@ -1,6 +1,7 @@
 package com.project.todo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.todo.domain.request.LoginRequest;
 import com.project.todo.domain.request.MemberDetailRequest;
 import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.service.MemberService;
@@ -40,7 +41,7 @@ class MemberControllerTest {
     @Test
     void join_success() {
         String requestUrl = "/join";
-        MemberDetailRequest testData = new MemberDetailRequest(null, "hello", "test@naver.com", "1111");
+        LoginRequest testData = new LoginRequest( null, "1111");
 
         ResponseEntity<ResponseResult> response = this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData, ResponseResult.class);
         Assertions.assertThat(response.getBody().getCode()).isEqualTo(0);
@@ -61,18 +62,14 @@ class MemberControllerTest {
     }
 
     @Test
-    public void mockingTest() {
+    void login_success() {
+        String requestUrl = "/login";
+        LoginRequest testData = new LoginRequest( null, "1111");
 
-//        log.info("port = {} server = {}", port, serverUrl);
-        // given
-        MemberDetailRequest testData = new MemberDetailRequest(null, null, "test@naver.com", "1111");
+        ResponseEntity<ResponseResult> response = this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData, ResponseResult.class);
 
-        String result = this.restTemplate.postForObject("http://localhost:" + port + "/api/member" + "/login", testData, String.class);
-
-        log.info("result = {}", result);
-
-
-        // when
-        // then
+        log.info("response = {}", response);
+        Assertions.assertThat(response.getBody().getCode()).isEqualTo(0);
+        Assertions.assertThat(response.getBody().getData()).isNull();
     }
 }

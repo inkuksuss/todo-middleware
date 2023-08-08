@@ -52,12 +52,12 @@ public class MemberService {
         return MemberDto.fromEntity(savedMember);
     }
 
-    public MemberDto doLogin(@Valid MemberDto memberDto) {
+    public MemberDto doLogin(String email, String password) {
 
-        Optional<Member> findMember = memberRepository.findByEmail( memberDto.getEmail());
+        Optional<Member> findMember = memberRepository.findByEmail(email);
         Member member = findMember.orElseThrow(NotFoundMemberException::new);
 
-        if (!member.getPassword().equals(memberDto.getPassword())) {
+        if (!member.getPassword().equals(password)) {
             throw new NoMatchPasswordException();
         }
 
