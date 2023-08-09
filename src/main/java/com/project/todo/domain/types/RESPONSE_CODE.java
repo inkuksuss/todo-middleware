@@ -1,4 +1,4 @@
-package com.project.todo.domain.response.common;
+package com.project.todo.domain.types;
 
 public enum RESPONSE_CODE {
 

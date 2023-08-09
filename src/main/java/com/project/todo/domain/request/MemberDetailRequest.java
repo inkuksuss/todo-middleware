@@ -2,9 +2,11 @@ package com.project.todo.domain.request;
 
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
+import lombok.ToString;
 
 
 @Getter
+@ToString
 public class MemberDetailRequest {
 
     private final Long memberId;

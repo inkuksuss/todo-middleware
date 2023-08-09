@@ -4,6 +4,7 @@ import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.request.JoinRequest;
 import com.project.todo.domain.request.LoginRequest;
 import com.project.todo.domain.request.MemberDetailRequest;
+import com.project.todo.domain.request.MemberSearchRequest;
 import com.project.todo.domain.response.MemberDetailResponse;
 import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.service.MemberService;
@@ -29,7 +30,6 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<ResponseResult<MemberDetailResponse>> login(@Validated @RequestBody LoginRequest request) {
 
-        log.info("Request = {}", request.toString());
         MemberDto loginMember = memberService.doLogin(request.getEmail(), request.getPassword());
 
         // create response
@@ -37,6 +37,7 @@ public class MemberController {
         response.setId(loginMember.getId());
         response.setName(loginMember.getName());
         response.setEmail(loginMember.getEmail());
+        response.setType(loginMember.getType());
         response.setCreated(loginMember.getCreated());
         response.setUpdated(loginMember.getUpdated());
 
@@ -56,4 +57,9 @@ public class MemberController {
 
         return new ResponseEntity<>(new ResponseResult<>(), HttpStatus.OK);
     }
+
+//    @PostMapping("/members")
+//    public ResponseEntity<ResponseResult<?>> getMemberList(@Validated @RequestBody MemberSearchRequest request) {
+//        memberService.
+//    }
 }

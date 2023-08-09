@@ -1,7 +1,7 @@
 package com.project.todo.exception.advice;
 
 
-import com.project.todo.domain.response.common.RESPONSE_CODE;
+import com.project.todo.domain.types.RESPONSE_CODE;
 import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.exception.NoMatchPasswordException;
@@ -49,16 +49,17 @@ public class GlobalExceptionAdvice {
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseResult<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.info("find on", e);
         return new ResponseEntity<>(
                 new ResponseResult<>(RESPONSE_CODE.INVALID_PARAMETER, "not valid due to validation error: " + e.getMessage()),
                 HttpStatus.BAD_REQUEST
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ResponseResult<Void>> handleConstraintViolationException(ConstraintViolationException e) {
         return new ResponseEntity<>(

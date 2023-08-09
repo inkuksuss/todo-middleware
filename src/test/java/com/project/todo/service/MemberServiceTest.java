@@ -1,18 +1,19 @@
 package com.project.todo.service;
 
 import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.entity.Member;
+import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.exception.NoMatchPasswordException;
 import com.project.todo.exception.NotFoundMemberException;
-import com.project.todo.repository.MemberRepository;
+import com.project.todo.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -68,6 +69,7 @@ class MemberServiceTest {
         MemberDto loginMember = memberService.doLogin(saveMember.getEmail(), saveMember.getPassword());
 
         assertThat(loginMember.getId()).isEqualTo(saveMember.getId());
+        assertThat(loginMember.getType()).isEqualTo(MEMBER_TYPE.MEMBER);
     }
 
     @Test
@@ -95,5 +97,56 @@ class MemberServiceTest {
 
         saveMember.setPassword("wrong");
         assertThatThrownBy(() -> memberService.doLogin(saveMember.getEmail(), saveMember.getPassword())).isInstanceOf(NoMatchPasswordException.class);
+    }
+
+    @Test
+    void pagingTest() {
+        for (int i = 0; i < 100; i++) {
+            MemberDto memberDto = new MemberDto();
+            memberDto.setName("test" + i);
+            memberDto.setPassword("111");
+            memberDto.setEmail("test" + i);
+            memberService.doJoin(memberDto);
+        }
+
+        MemberSearchCond cond = new MemberSearchCond();
+        cond.setPage(2);
+        cond.setSize(30);
+        Page<Member> members = memberService.searchMemberList(cond);
+
+        for (Member member : members) {
+            log.info("member = {}", member);
+        }
+
+        assertThat(members.getContent().size()).isEqualTo(30);
+        assertThat(members.getTotalElements()).isEqualTo(100);
+        assertThat(members.getTotalPages()).isEqualTo(4);
+
+    }
+
+    @Test
+    void pagingNameTest() {
+        for (int i = 0; i < 100; i++) {
+            MemberDto memberDto = new MemberDto();
+            memberDto.setName("test" + i);
+            memberDto.setPassword("111");
+            memberDto.setEmail("test" + i);
+            memberService.doJoin(memberDto);
+        }
+
+        MemberSearchCond cond = new MemberSearchCond();
+        cond.setPage(0);
+        cond.setSize(30);
+        cond.setEmail("test61");
+        Page<Member> members = memberService.searchMemberList(cond);
+
+        for (Member member : members) {
+            log.info("member = {}", member);
+        }
+
+        assertThat(members.getContent().size()).isEqualTo(1);
+        assertThat(members.getTotalElements()).isEqualTo(1);
+        assertThat(members.getTotalPages()).isEqualTo(1);
+
     }
 }

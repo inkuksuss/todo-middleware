@@ -1,14 +1,16 @@
 package com.project.todo.service;
 
 import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.domain.dto.MemberSearchCond;
 import com.project.todo.domain.entity.Member;
+import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.exception.NoMatchPasswordException;
 import com.project.todo.exception.NotFoundMemberException;
-import com.project.todo.repository.MemberRepository;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import com.project.todo.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -18,12 +20,15 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Validated
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     @Transactional
     public MemberDto doJoin(MemberDto memberDto) {
@@ -46,13 +51,21 @@ public class MemberService {
         });
 
         // need encrypt
-        Member member = new Member(memberDto.getName(), memberDto.getEmail(), memberDto.getPassword());
+        Member member = new Member(memberDto.getName(), memberDto.getEmail(), memberDto.getPassword(), MEMBER_TYPE.MEMBER);
         Member savedMember = memberRepository.save(member);
 
         return MemberDto.fromEntity(savedMember);
     }
 
     public MemberDto doLogin(String email, String password) {
+
+        if (!StringUtils.hasText(email)) {
+            throw new IllegalArgumentException("email can not be null");
+        }
+
+        if (!StringUtils.hasText(password)) {
+            throw new IllegalArgumentException("password can not be null");
+        }
 
         Optional<Member> findMember = memberRepository.findByEmail(email);
         Member member = findMember.orElseThrow(NotFoundMemberException::new);
@@ -62,5 +75,16 @@ public class MemberService {
         }
 
         return MemberDto.fromEntity(member);
+    }
+
+    public Page<Member> searchMemberList(MemberSearchCond cond) {
+        PageRequest pageRequest = PageRequest.of(
+                cond.getPage() == null ? 0 : cond.getPage(),
+                cond.getSize() == null ? 20 : cond.getSize()
+        );
+
+        Page<Member> pagingMemberList = memberRepository.findPagingMemberList(cond, pageRequest);
+
+        return pagingMemberList;
     }
 }

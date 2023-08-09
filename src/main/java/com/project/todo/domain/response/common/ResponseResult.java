@@ -1,6 +1,7 @@
 package com.project.todo.domain.response.common;
 
 
+import com.project.todo.domain.types.RESPONSE_CODE;
 import lombok.Getter;
 
 @Getter
@@ -30,5 +31,14 @@ public class ResponseResult<T> {
         this.code = code.getCode();
         this.message = meesage;
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "ResponseResult{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", data=" + data.toString() +
+                '}';
     }
 }
