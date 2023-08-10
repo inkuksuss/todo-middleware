@@ -2,12 +2,14 @@ package com.project.todo.service;
 
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.exception.NoMatchPasswordException;
 import com.project.todo.exception.NotFoundMemberException;
 import com.project.todo.repository.member.MemberRepository;
+import com.project.todo.utils.constant.PageConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -77,14 +79,19 @@ public class MemberService {
         return MemberDto.fromEntity(member);
     }
 
-    public Page<Member> searchMemberList(MemberSearchCond cond) {
+    public PageDto<MemberDto> searchMemberList(MemberSearchCond cond) {
         PageRequest pageRequest = PageRequest.of(
-                cond.getPage() == null ? 0 : cond.getPage(),
-                cond.getSize() == null ? 20 : cond.getSize()
+                cond.getPage() == null ? PageConst.DEFAULT_PAGE : cond.getPage(),
+                cond.getSize() == null ? PageConst.DEFAULT_PAGE_SIZE : cond.getSize()
         );
 
-        Page<Member> pagingMemberList = memberRepository.findPagingMemberList(cond, pageRequest);
+        Page<Member> memberList = memberRepository.findPagingMemberList(cond, pageRequest);
 
-        return pagingMemberList;
+        return new PageDto<>(
+                memberList.getTotalElements(),
+                memberList.getTotalPages(),
+                memberList.hasNext(),
+                memberList.map(MemberDto::fromEntity).toList()
+        );
     }
 }

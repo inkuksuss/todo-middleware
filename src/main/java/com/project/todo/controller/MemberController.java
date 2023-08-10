@@ -1,11 +1,13 @@
 package com.project.todo.controller;
 
 import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.request.JoinRequest;
 import com.project.todo.domain.request.LoginRequest;
-import com.project.todo.domain.request.MemberDetailRequest;
 import com.project.todo.domain.request.MemberSearchRequest;
 import com.project.todo.domain.response.MemberDetailResponse;
+import com.project.todo.domain.response.common.ResponsePageResult;
 import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +60,21 @@ public class MemberController {
         return new ResponseEntity<>(new ResponseResult<>(), HttpStatus.OK);
     }
 
-//    @PostMapping("/members")
-//    public ResponseEntity<ResponseResult<?>> getMemberList(@Validated @RequestBody MemberSearchRequest request) {
-//        memberService.
-//    }
+    @PostMapping("/members")
+    public ResponseEntity<ResponsePageResult<MemberDto>> getMemberList(@Validated @RequestBody MemberSearchRequest request) {
+
+        MemberSearchCond memberSearchCond = new MemberSearchCond();
+        memberSearchCond.setName(request.getName());
+        memberSearchCond.setEmail(request.getEmail());
+        memberSearchCond.setPage(request.getPage());
+        memberSearchCond.setSize(request.getSize());
+
+
+        PageDto<MemberDto> pageDto = memberService.searchMemberList(memberSearchCond);
+
+        return new ResponseEntity<>(
+                new ResponsePageResult<>(pageDto),
+                HttpStatus.OK
+        );
+    }
 }
