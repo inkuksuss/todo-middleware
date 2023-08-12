@@ -26,11 +26,11 @@ public class TodoApplication {
 
 
 
-	@EventListener(ApplicationReadyEvent.class)
-	@Transactional
-	public void initData() {
-		for (int i = 0; i < 100; i++) {
-			memberRepository.save(new Member("member" + i, "test@naver.com", "1111", MEMBER_TYPE.MEMBER));
-		}
-	}
+//	@EventListener(ApplicationReadyEvent.class)
+//	@Transactional
+//	public void initData() {
+//		for (int i = 0; i < 100; i++) {
+//			memberRepository.save(new Member("member" + i, "test@naver.com", "1111", MEMBER_TYPE.MEMBER));
+//		}
+//	}
 }

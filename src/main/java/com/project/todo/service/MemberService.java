@@ -87,6 +87,8 @@ public class MemberService {
 
         Page<Member> memberList = memberRepository.findPagingMemberList(cond, pageRequest);
 
+        log.info("totals = {}", memberList.getContent().size());
+
         return new PageDto<>(
                 memberList.getTotalElements(),
                 memberList.getTotalPages(),

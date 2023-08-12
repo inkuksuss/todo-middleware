@@ -2,18 +2,24 @@ package com.project.todo.service;
 
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.exception.NoMatchPasswordException;
 import com.project.todo.exception.NotFoundMemberException;
+import com.project.todo.repository.member.MemberJdbcRepository;
 import com.project.todo.repository.member.MemberRepository;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Iterator;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -24,6 +30,9 @@ class MemberServiceTest {
 
     @Autowired MemberService memberService;
     @Autowired MemberRepository memberRepository;
+    @Autowired MemberJdbcRepository memberJdbcRepository;
+    @Autowired
+    EntityManager entityManager;
 
     @Test
     void doJoin() {
@@ -37,6 +46,22 @@ class MemberServiceTest {
         assertThat(memberDto.getName()).isEqualTo(saveMember.getName());
         assertThat(memberDto.getEmail()).isEqualTo(saveMember.getEmail());
         assertThat(saveMember.getPassword()).isNull();
+    }
+
+    @Test
+    @Commit
+    void jdbcTest() {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName("test");
+        memberDto.setPassword("111");
+        memberDto.setEmail("test");
+
+        MemberDto saveMember = memberService.doJoin(memberDto);
+        entityManager.flush();
+        entityManager.clear();
+
+        Optional<MemberDto> jdbcMember = memberJdbcRepository.findJdbcById(saveMember.getId());
+        log.info("jdbc = {}", jdbcMember.get());
     }
 
     @Test
@@ -112,15 +137,23 @@ class MemberServiceTest {
         MemberSearchCond cond = new MemberSearchCond();
         cond.setPage(2);
         cond.setSize(30);
-        Page<Member> members = memberService.searchMemberList(cond);
+        PageDto<MemberDto> pageDto = memberService.searchMemberList(cond);
 
-        for (Member member : members) {
-            log.info("member = {}", member);
+        Iterable<Member> all = memberRepository.findAll();
+        Iterator<Member> iterator = all.iterator();
+
+
+        int totalCount = 0;
+        while (iterator.hasNext()) {
+            totalCount++;
+            iterator.next();
         }
 
-        assertThat(members.getContent().size()).isEqualTo(30);
-        assertThat(members.getTotalElements()).isEqualTo(100);
-        assertThat(members.getTotalPages()).isEqualTo(4);
+        log.info("iterator = {}", totalCount);
+
+        assertThat(pageDto.getDataList().size()).isEqualTo(30);
+        assertThat(pageDto.getTotalCount()).isEqualTo(totalCount);
+        assertThat(pageDto.getTotalPage()).isEqualTo(4);
 
     }
 
@@ -138,15 +171,12 @@ class MemberServiceTest {
         cond.setPage(0);
         cond.setSize(30);
         cond.setEmail("test61");
-        Page<Member> members = memberService.searchMemberList(cond);
+        PageDto<MemberDto> pageDto = memberService.searchMemberList(cond);
 
-        for (Member member : members) {
-            log.info("member = {}", member);
-        }
-
-        assertThat(members.getContent().size()).isEqualTo(1);
-        assertThat(members.getTotalElements()).isEqualTo(1);
-        assertThat(members.getTotalPages()).isEqualTo(1);
-
+        assertThat(pageDto.getDataList().size()).isEqualTo(1);
+        assertThat(pageDto.getTotalCount()).isEqualTo(1);
+        assertThat(pageDto.getTotalPage()).isEqualTo(1);
     }
+
+
 }

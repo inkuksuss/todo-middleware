@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -50,11 +52,19 @@ public class GlobalExceptionAdvice {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResponseResult<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.info("find on", e);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseResult<Void>> handleIllegalArgumentException(IllegalArgumentException e) {
         return new ResponseEntity<>(
                 new ResponseResult<>(RESPONSE_CODE.INVALID_PARAMETER, "not valid due to validation error: " + e.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseResult<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return new ResponseEntity<>(
+                new ResponseResult<>(RESPONSE_CODE.INVALID_PARAMETER, "not valid due to validation error: " + e.getBindingResult().getFieldError().getDefaultMessage()),
                 HttpStatus.BAD_REQUEST
         );
     }
