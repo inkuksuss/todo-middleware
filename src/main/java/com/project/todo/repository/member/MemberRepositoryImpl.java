@@ -2,8 +2,6 @@ package com.project.todo.repository.member;
 
 import com.project.todo.domain.dto.MemberSearchCond;
 import com.project.todo.domain.entity.Member;
-import com.project.todo.domain.entity.QMember;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -30,9 +28,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     @Override
     public Page<Member> findPagingMemberList(MemberSearchCond cond, Pageable pageable) {
-        log.info("offset = {}", pageable.getOffset());
-        log.info("pagealbe = {}", pageable);
-        log.info("size = {}", pageable.getPageSize());
 
         List<Member> memberList = queryFactory
                 .select(member)
@@ -53,8 +48,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         emailEq(cond.getEmail())
                 )
                 .fetchOne();
-
-        log.info("count = {}", count);
 
         return new PageImpl<>(memberList, pageable, count);
     }

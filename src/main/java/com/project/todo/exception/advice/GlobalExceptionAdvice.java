@@ -4,14 +4,12 @@ package com.project.todo.exception.advice;
 import com.project.todo.domain.types.RESPONSE_CODE;
 import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.exception.DuplicateEmailException;
-import com.project.todo.exception.NoMatchPasswordException;
-import com.project.todo.exception.NotFoundMemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,21 +30,21 @@ public class GlobalExceptionAdvice {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler(NoMatchPasswordException.class)
-    public ResponseEntity<ResponseResult<Void>> noMatchPasswordHandler(NoMatchPasswordException e) {
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ResponseResult<Void>> badCredentialsExceptionHandler(BadCredentialsException e) {
         log.error("[ex handler] ex", e);
         return new ResponseEntity<>(
-                new ResponseResult<>(RESPONSE_CODE.NO_MATCH_PASSWORD, "NoMatchPasswordException"),
+                new ResponseResult<>(RESPONSE_CODE.NO_MATCH_PASSWORD, "BadCredentialsException"),
                 HttpStatus.OK
         );
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler(NotFoundMemberException.class)
-    public ResponseEntity<ResponseResult<Void>> notFoundMemberHandler(NotFoundMemberException e) {
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ResponseResult<Void>> usernameNotFoundExceptionHandler(UsernameNotFoundException e) {
         log.error("[ex handler] ex", e);
         return new ResponseEntity<>(
-                new ResponseResult<>(RESPONSE_CODE.NOT_FOUND_MEMBER, "NotFoundMemberException"),
+                new ResponseResult<>(RESPONSE_CODE.NOT_FOUND_MEMBER, "UsernameNotFoundException"),
                 HttpStatus.OK
         );
     }

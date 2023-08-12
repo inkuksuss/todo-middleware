@@ -1,4 +1,4 @@
-package com.project.todo.utils.constant;
+package com.project.todo.utils.constants;
 
 public class PageConst {
 

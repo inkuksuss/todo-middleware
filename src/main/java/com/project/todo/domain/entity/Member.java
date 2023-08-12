@@ -45,6 +45,11 @@ public class Member extends BaseTimeEntity {
         this.type = type;
     }
 
+    public Member(Long id, String name, String email, String password, MEMBER_TYPE type) {
+        this(name, email, password, type);
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
