@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Member> findPagingMemberList(MemberSearchCond cond, Pageable pageable) {
 
         List<Member> memberList = queryFactory

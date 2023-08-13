@@ -9,6 +9,7 @@ import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.repository.member.MemberJdbcRepository;
 import com.project.todo.repository.member.MemberRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ class MemberServiceTest {
     void doJoin() {
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
-        memberDto.setPassword("111");
-        memberDto.setEmail("test");
+        memberDto.setEmail("test@naver.com");
+        memberDto.setPassword("111naver.com");
 
         MemberDto saveMember = memberService.doJoin(memberDto);
 
@@ -47,12 +48,23 @@ class MemberServiceTest {
     }
 
     @Test
+    void doJoinInvalidEmailFormat() {
+        MemberDto memberDto = new MemberDto();
+        memberDto.setName("test");
+        memberDto.setEmail("tesnaver.com");
+        memberDto.setPassword("111");
+
+
+        assertThatThrownBy(() -> memberService.doJoin(memberDto)).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
     @Commit
     void jdbcTest() {
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
         memberDto.setPassword("111");
-        memberDto.setEmail("test");
+        memberDto.setEmail("test@naver.com");
 
         MemberDto saveMember = memberService.doJoin(memberDto);
         entityManager.flush();
@@ -67,14 +79,14 @@ class MemberServiceTest {
         MemberDto memberDto1 = new MemberDto();
         memberDto1.setName("test");
         memberDto1.setPassword("111");
-        memberDto1.setEmail("test");
+        memberDto1.setEmail("test@naver.com");
 
         MemberDto saveMember = memberService.doJoin(memberDto1);
 
         MemberDto memberDto2 = new MemberDto();
         memberDto2.setName("asdasd");
         memberDto2.setPassword("111");
-        memberDto2.setEmail("test");
+        memberDto2.setEmail("test@naver.com");
 
         assertThatThrownBy(() -> memberService.doJoin(memberDto2)).isInstanceOf(DuplicateEmailException.class);
     }
@@ -84,7 +96,7 @@ class MemberServiceTest {
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
         memberDto.setPassword("111");
-        memberDto.setEmail("test");
+        memberDto.setEmail("test@naver.com");
 
         MemberDto saveMember = memberService.doJoin(memberDto);
 
@@ -100,7 +112,7 @@ class MemberServiceTest {
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
         memberDto.setPassword("111");
-        memberDto.setEmail("test");
+        memberDto.setEmail("test@naver.com");
 
         MemberDto saveMember = memberService.doJoin(memberDto);
 
@@ -114,7 +126,7 @@ class MemberServiceTest {
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
         memberDto.setPassword("111");
-        memberDto.setEmail("test");
+        memberDto.setEmail("test@naver.com");
 
         MemberDto saveMember = memberService.doJoin(memberDto);
 
@@ -128,7 +140,7 @@ class MemberServiceTest {
             MemberDto memberDto = new MemberDto();
             memberDto.setName("test" + i);
             memberDto.setPassword("111");
-            memberDto.setEmail("test" + i);
+            memberDto.setEmail("test@naver.com" + i);
             memberService.doJoin(memberDto);
         }
 
@@ -161,7 +173,7 @@ class MemberServiceTest {
             MemberDto memberDto = new MemberDto();
             memberDto.setName("test" + i);
             memberDto.setPassword("111");
-            memberDto.setEmail("test" + i);
+            memberDto.setEmail("test@naver.com" + i);
             memberService.doJoin(memberDto);
         }
 

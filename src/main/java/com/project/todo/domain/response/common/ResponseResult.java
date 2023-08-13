@@ -1,14 +1,15 @@
 package com.project.todo.domain.response.common;
 
 
-import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.types.RESPONSE_CODE;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class ResponseResult<T> {
 
-    private int code;
+    private int code = 99;
 
     private String message;
 
@@ -23,23 +24,14 @@ public class ResponseResult<T> {
         this.data = t;
     }
 
-    public ResponseResult(RESPONSE_CODE code, String meesage) {
+    public ResponseResult(RESPONSE_CODE code, String message) {
         this.code = code.getCode();
-        this.message = meesage;
+        this.message = message;
     }
 
-    public ResponseResult(RESPONSE_CODE code, String meesage, T data) {
+    public ResponseResult(RESPONSE_CODE code, String message, T data) {
         this.code = code.getCode();
-        this.message = meesage;
+        this.message = message;
         this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "ResponseResult{" +
-                "code=" + code +
-                ", message='" + message + '\'' +
-                ", data=" + data.toString() +
-                '}';
     }
 }

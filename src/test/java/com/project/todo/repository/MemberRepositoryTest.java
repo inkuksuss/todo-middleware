@@ -17,16 +17,6 @@ class MemberRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
-    @Rollback(value = false)
     public void save() {
-//        Member member = new Member();
-//        member.setMemberId("test1");
-//        member.setMemberEmail("inkuksuss@naver.com");
-//        member.setMemberPassword("1234");
-//        member.setMemberName("inguk");
-//
-//        Member savedMember = memberRepository.save(member);
-//
-//        org.assertj.core.api.Assertions.assertThat(savedMember).isNotNull();
     }
 }

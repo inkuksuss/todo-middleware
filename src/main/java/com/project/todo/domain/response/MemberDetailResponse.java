@@ -7,7 +7,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
 @ToString
 public class MemberDetailResponse {
 
@@ -23,4 +23,33 @@ public class MemberDetailResponse {
 
     private LocalDateTime updated;
 
+    private String token;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setType(MEMBER_TYPE type) {
+        this.type = type;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public void setUpdated(LocalDateTime updated) {
+        this.updated = updated;
+    }
+
+    public void addToken(String token) {
+        this.token = token;
+    }
 }

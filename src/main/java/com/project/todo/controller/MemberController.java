@@ -42,6 +42,7 @@ public class MemberController {
         response.setType(loginMember.getType());
         response.setCreated(loginMember.getCreated());
         response.setUpdated(loginMember.getUpdated());
+        response.addToken(loginMember.getToken());
 
         return new ResponseEntity<>(new ResponseResult<>(response), HttpStatus.OK);
     }

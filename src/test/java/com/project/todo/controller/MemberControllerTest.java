@@ -1,8 +1,12 @@
 package com.project.todo.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.project.todo.domain.request.JoinRequest;
 import com.project.todo.domain.request.LoginRequest;
 import com.project.todo.domain.request.MemberDetailRequest;
+import com.project.todo.domain.response.MemberDetailResponse;
 import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,41 +40,55 @@ class MemberControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
 
     @Test
     void join_success() {
+        //given
         String requestUrl = "/join";
-        LoginRequest testData = new LoginRequest( null, "1111");
+        JoinRequest testData = new JoinRequest("asd@naver.com", "test", "1111");
 
+        //when
         ResponseEntity<ResponseResult> response = this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData, ResponseResult.class);
+
+        //then
+        log.info("response = {}", response);
         Assertions.assertThat(response.getBody().getCode()).isEqualTo(0);
         Assertions.assertThat(response.getBody().getData()).isNull();
     }
 
     @Test
     void join_same_email() {
+        //given
         String requestUrl = "/join";
-
-        MemberDetailRequest testData1 = new MemberDetailRequest(null, "hello", "test@naver.com", "1111");
+        JoinRequest testData1 = new JoinRequest("asd@naver.com", "test", "1111");
         this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData1, ResponseResult.class);
 
-        MemberDetailRequest testData2 = new MemberDetailRequest(null, "hello2", "test@naver.com", "11112");
+        // when
+        JoinRequest testData2 = new JoinRequest("asd@naver.com", "test2", "1111");
         ResponseEntity<ResponseResult> response = this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData2, ResponseResult.class);
+
+        //then
+        log.info("response = {}", response);
         Assertions.assertThat(response.getBody().getCode()).isEqualTo(1);
         Assertions.assertThat(response.getBody().getData()).isNull();
     }
 
     @Test
-    void login_success() {
-        String requestUrl = "/login";
-        LoginRequest testData = new LoginRequest( null, "1111");
+    void login_success() throws JsonProcessingException {
+        //given
+        String joinReqeust = "/join";
+        JoinRequest testData1 = new JoinRequest("asd@naver.com", "test", "1111");
+        this.restTemplate.postForEntity("http://localhost:" + port + prefix + joinReqeust, testData1, ResponseResult.class);
 
+        //when
+        String requestUrl = "/login";
+        LoginRequest testData = new LoginRequest( "asd@naver.com", "1111");
         ResponseEntity<ResponseResult> response = this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData, ResponseResult.class);
 
-        log.info("response = {}", response);
+        MemberDetailResponse responseData = objectMapper.convertValue(response.getBody().getData(), MemberDetailResponse.class);
         Assertions.assertThat(response.getBody().getCode()).isEqualTo(0);
-        Assertions.assertThat(response.getBody().getData()).isNull();
+        Assertions.assertThat(responseData.getToken()).isNotNull();
     }
 }

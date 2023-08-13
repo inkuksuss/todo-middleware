@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 public class ResponsePageResult<T> {
 
-    private int code;
+    private int code = 99;
 
     private String message;
 
