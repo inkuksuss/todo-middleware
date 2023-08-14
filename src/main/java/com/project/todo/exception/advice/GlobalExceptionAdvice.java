@@ -8,12 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 @Slf4j
 @RestControllerAdvice
@@ -76,13 +78,23 @@ public class GlobalExceptionAdvice {
         );
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ResponseResult<Void>> handleAccessDeniedException(AccessDeniedException e) {
+        log.warn("find", e);
+        return new ResponseEntity<>(
+                new ResponseResult<>(RESPONSE_CODE.ACCESS_DENIED, e.getMessage()),
+                HttpStatus.FORBIDDEN
+        );
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public ResponseEntity<ResponseResult<Void>> exHandler(Exception e) {
         log.error("[ex handler] ex", e);
         return new ResponseEntity<>(
                 new ResponseResult<>(RESPONSE_CODE.EXCEPTION, "Exception"),
-                HttpStatus.OK
+                HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
 }

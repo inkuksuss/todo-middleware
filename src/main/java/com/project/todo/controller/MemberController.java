@@ -1,8 +1,12 @@
 package com.project.todo.controller;
 
+import com.project.todo.aop.annotation.Login;
+import com.project.todo.config.argument_resolver.annotation.LoginId;
+import com.project.todo.config.argument_resolver.annotation.LoginMember;
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.dto.MemberSearchCond;
 import com.project.todo.domain.dto.PageDto;
+import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.request.JoinRequest;
 import com.project.todo.domain.request.LoginRequest;
 import com.project.todo.domain.request.MemberSearchRequest;
@@ -14,11 +18,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -77,5 +86,14 @@ public class MemberController {
                 new ResponsePageResult<>(pageDto),
                 HttpStatus.OK
         );
+    }
+
+    @Login
+    @PostMapping("/test")
+    public ResponseEntity<?> test(@LoginId Long id, @LoginMember Member member) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("id = {}", id);
+        log.info("member = {}", member);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -5,14 +5,12 @@ import com.project.todo.domain.types.MEMBER_TYPE;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -41,6 +39,7 @@ public class MemberDto {
     private String token;
 
     public static MemberDto fromEntity(Member member) {
+        Assert.notNull(member.getId(), "member id is not null");
 
         MemberDto memberDto = new MemberDto();
         memberDto.id = member.getId();
@@ -50,9 +49,6 @@ public class MemberDto {
         memberDto.isDelete = member.getIsDelete();
         memberDto.created = member.getCreated();
         memberDto.updated = member.getUpdated();
-        memberDto.todoList = member.getTodoList().stream()
-                .map(TodoDto::fromEntity)
-                .collect(Collectors.toList());
 
         return memberDto;
     }

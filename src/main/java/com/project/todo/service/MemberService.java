@@ -1,7 +1,6 @@
 package com.project.todo.service;
 
 import com.project.todo.config.security.provider.JwtTokenProvider;
-import com.project.todo.domain.dto.MemberContext;
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.dto.MemberSearchCond;
 import com.project.todo.domain.dto.PageDto;

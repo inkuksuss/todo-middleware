@@ -59,7 +59,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @Commit
     void jdbcTest() {
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
@@ -93,16 +92,18 @@ class MemberServiceTest {
 
     @Test
     void doLogin() {
+        //given
         MemberDto memberDto = new MemberDto();
         memberDto.setName("test");
         memberDto.setPassword("111");
         memberDto.setEmail("test@naver.com");
-
         MemberDto saveMember = memberService.doJoin(memberDto);
 
+        //when
         saveMember.setPassword(memberDto.getPassword());
         MemberDto loginMember = memberService.doLogin(saveMember.getEmail(), saveMember.getPassword());
 
+        //then
         assertThat(loginMember.getId()).isEqualTo(saveMember.getId());
         assertThat(loginMember.getType()).isEqualTo(MEMBER_TYPE.MEMBER);
     }
@@ -180,13 +181,13 @@ class MemberServiceTest {
         MemberSearchCond cond = new MemberSearchCond();
         cond.setPage(0);
         cond.setSize(30);
-        cond.setEmail("test61");
+        cond.setEmail("test@naver.com61");
         PageDto<MemberDto> pageDto = memberService.searchMemberList(cond);
+
+        log.info("pageDto = {}", pageDto.getDataList());
 
         assertThat(pageDto.getDataList().size()).isEqualTo(1);
         assertThat(pageDto.getTotalCount()).isEqualTo(1);
         assertThat(pageDto.getTotalPage()).isEqualTo(1);
     }
-
-
 }

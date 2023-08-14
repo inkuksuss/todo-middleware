@@ -7,6 +7,7 @@ public enum RESPONSE_CODE {
     NO_MATCH_PASSWORD(2),
     NOT_FOUND_MEMBER(3),
     INVALID_PARAMETER(4),
+    ACCESS_DENIED(5),
     EXCEPTION(99);
 
     private final int code;

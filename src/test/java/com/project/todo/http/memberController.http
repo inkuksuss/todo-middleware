@@ -1,0 +1,27 @@
+### Send POST request to /join
+POST http://localhost:8080/api/member/join
+Content-Type: application/json
+
+{
+  "email": "test@naver.com",
+  "password": "1111",
+  "name": "test"
+}
+
+### Send POST request to /login
+POST http://localhost:8080/api/member/login
+Content-Type: application/json
+
+{
+  "email": "test@naver.com",
+  "password": "1111"
+}
+
+### Send POST request to /test
+POST http://localhost:8080/api/member/test
+Content-Type: application/json
+X-AUTH-TOKEN: yJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QG5hdmVyLmNvbSIsInJvbGVzIjpbeyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sImlhdCI6MTY5MjAzMjAwNSwiZXhwIjoxNjkyMDMzODA1fQ.hMk_5FLSbJOYnD1jGuuXhlqV4rPyWTn7Dni056KpSOU
+
+{
+}
+

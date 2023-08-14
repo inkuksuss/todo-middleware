@@ -71,7 +71,7 @@ class MemberControllerTest {
 
         //then
         log.info("response = {}", response);
-        Assertions.assertThat(response.getBody().getCode()).isEqualTo(1);
+        Assertions.assertThat(response.getBody().getCode()).isEqualTo(31);
         Assertions.assertThat(response.getBody().getData()).isNull();
     }
 
