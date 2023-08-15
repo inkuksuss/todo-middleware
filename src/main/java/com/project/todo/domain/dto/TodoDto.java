@@ -33,7 +33,7 @@ public class TodoDto {
 
     public static TodoDto fromEntity(Todo todo) {
         TodoDto todoDto = new TodoDto();
-//        todoDto.memberId = todo.getMember().getId();
+        todoDto.memberId = todo.getMember().getId();
         todoDto.todoId = todo.getId();
         todoDto.type = todo.getType();
         todoDto.title = todo.getTitle();

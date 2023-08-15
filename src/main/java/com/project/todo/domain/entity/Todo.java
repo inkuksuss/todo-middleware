@@ -11,10 +11,10 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@SQLDelete(sql = "UPDATE todo SET is_delete = false WHERE id = ?")
-@Where(clause = "is_delete = 'N'")
+@SQLDelete(sql = "UPDATE todo SET is_delete = false WHERE todo_id = ?")
+//@Where(clause = "is_delete = 'N'")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"id", "type", "title", "content"})
+@ToString(callSuper = true, exclude = "member")
 public class Todo extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,4 +63,5 @@ public class Todo extends BaseEntity {
     public void setContent(String content) {
         this.content = content;
     }
+
 }

@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@SQLDelete(sql = "UPDATE member SET is_delete = false WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET is_delete = false WHERE member_id = ?")
 @Where(clause = "is_delete = 'N'")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = { "id", "name", "email", "password" })
+@ToString(callSuper = true, exclude = "todoList")
 public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

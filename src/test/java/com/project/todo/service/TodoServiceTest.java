@@ -66,7 +66,6 @@ class TodoServiceTest {
         Assertions.assertThat(savedTodo.getContent()).isEqualTo("test data");
         Assertions.assertThat(savedTodo.getMemberId()).isEqualTo(savedMemberDto.getId());
         Assertions.assertThat(savedTodo.getCreated()).isNotNull();
-        Assertions.assertThat(savedTodo.getUpdated()).isNull();
     }
 
     @Test

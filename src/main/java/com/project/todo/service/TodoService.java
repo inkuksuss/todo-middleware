@@ -37,7 +37,7 @@ public class TodoService {
             Optional<Todo> findTodo = todoRepository.findById(todoDto.getTodoId());
 
             // NotfoundTodo
-            Todo todo = findTodo.orElseThrow(IllegalStateException::new);
+            Todo todo = findTodo.orElseThrow(NoSuchElementException::new);
             todo.setType(todoDto.getType());
             todo.setTitle(todoDto.getTitle());
             todo.setContent(todoDto.getContent());
@@ -54,6 +54,25 @@ public class TodoService {
 
         return TodoDto.fromEntity(savedTodo);
     }
+
+    @Transactional
+    public Long removeTodo(Long memberId, Long todoId) {
+
+        if (todoId == null) {
+            throw new IllegalArgumentException("todo id can not be null");
+        }
+
+        if (memberId == null) {
+            throw new IllegalArgumentException("member id can not be null");
+        }
+
+//        memberRepository.delete();
+        return 1L;
+
+
+    }
+
+
 
     public TodoDto findTodo(Long id) {
         Todo todo = todoRepository.findById(id)

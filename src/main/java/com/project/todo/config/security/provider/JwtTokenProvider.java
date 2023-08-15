@@ -19,9 +19,10 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final long tokenValidTime;
+    private final String secretKey;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
-    private final String secretKey;
+
 
     public JwtTokenProvider(
             UserDetailsService userDetailsService,
