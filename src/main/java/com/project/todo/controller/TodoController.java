@@ -23,8 +23,44 @@ public class TodoController {
 
     private final TodoService todoService;
 
+    /*
+    * @param TODO_TYPE type (required = false)
+    * @param String title
+    * @param String content
+    *
+    * @return Long todoId
+    *
+    * @throws UsernameNotFoundException
+    * @throws NoSuchElementException
+    * */
     @PostMapping("/save")
     public ResponseEntity<ResponseResult<Long>> addTodo(
+            @RequestBody @Validated AddTodoRequest request,
+            @LoginId Long memberId
+    ) {
+        TodoDto dto = new TodoDto();
+        dto.setMemberId(memberId);
+        dto.setTodoId(request.getTodoId());
+        dto.setType(TODO_TYPE.COMMON);
+        dto.setTitle(request.getTitle());
+        dto.setContent(request.getContent());
+
+        TodoDto todoDto = todoService.saveTodo(dto);
+
+        return new ResponseEntity<>(
+                new ResponseResult<>(RESPONSE_CODE.SUCCESS, null, todoDto.getTodoId()),
+                HttpStatus.OK
+        );
+    }
+
+    /*
+     * @param Long todoId (required = false)
+     * @param TODO_TYPE type
+     * @param String title
+     * @param String content
+     * */
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<ResponseResult<Long>> updateTodo(
             @RequestBody @Validated AddTodoRequest request,
             @LoginId Long memberId
     ) {
@@ -57,8 +93,8 @@ public class TodoController {
             throw new IllegalArgumentException("member id can not be null");
         }
 
-        todoService.removeTodo(memberId, todoId);
+        todoService.removeOneTodo(memberId, todoId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseResult<>(), HttpStatus.OK);
     }
 }

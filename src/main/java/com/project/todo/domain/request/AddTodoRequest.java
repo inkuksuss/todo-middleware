@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 public class AddTodoRequest {
 
-    @NotEmpty
     private Long todoId;
 
     private TODO_TYPE type;

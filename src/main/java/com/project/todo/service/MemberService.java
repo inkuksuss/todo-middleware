@@ -63,6 +63,8 @@ public class MemberService {
                 MEMBER_TYPE.MEMBER
         ));
 
+        log.info("saved = {}", savedMember.toString());
+
         return MemberDto.fromEntity(savedMember);
     }
 

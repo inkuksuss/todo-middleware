@@ -8,6 +8,7 @@ import com.project.todo.repository.member.MemberRepository;
 import com.project.todo.repository.todo.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class TodoService {
         Optional<Member> findMember = memberRepository.findById(todoDto.getMemberId());
 
         // NotFoundMember
-        Member member = findMember.orElseThrow(IllegalStateException::new);
+        Member member = findMember.orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         Todo savedTodo = null;
 
@@ -56,7 +57,7 @@ public class TodoService {
     }
 
     @Transactional
-    public Long removeTodo(Long memberId, Long todoId) {
+    public void removeOneTodo(Long memberId, Long todoId) {
 
         if (todoId == null) {
             throw new IllegalArgumentException("todo id can not be null");
@@ -66,10 +67,7 @@ public class TodoService {
             throw new IllegalArgumentException("member id can not be null");
         }
 
-//        memberRepository.delete();
-        return 1L;
-
-
+        todoRepository.deleteDynamicTodo(todoId, memberId);
     }
 
 

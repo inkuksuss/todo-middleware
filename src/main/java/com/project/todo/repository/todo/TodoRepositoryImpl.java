@@ -43,18 +43,6 @@ public class TodoRepositoryImpl implements TodoRepositoryCustom {
         em.flush();
         em.clear();
 
-        List<Todo> fetch = queryFactory.selectFrom(todo).where(
-                todoIdEq(todoId),
-                memberIdEq(memberId)
-        ).fetch();
-
-        if (fetch.size() > 0)log.info("fetch = {}", fetch.get(0));
-
-        log.warn("em = {}", em.getClass());
-
-//        em.flush();
-//        em.clear();
-
         return deleteCount;
     }
 

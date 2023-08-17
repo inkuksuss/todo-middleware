@@ -12,7 +12,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @SQLDelete(sql = "UPDATE todo SET is_delete = false WHERE todo_id = ?")
-//@Where(clause = "is_delete = 'N'")
+@Where(clause = "is_delete = 'N'")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = "member")
 public class Todo extends BaseEntity {
