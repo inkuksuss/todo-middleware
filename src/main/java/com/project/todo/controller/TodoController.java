@@ -12,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestController
@@ -23,16 +26,17 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    /*
+    /**
     * @param TODO_TYPE type (required = false)
-    * @param String title
+    * @param string title
+     *               
     * @param String content
     *
     * @return Long todoId
     *
     * @throws UsernameNotFoundException
     * @throws NoSuchElementException
-    * */
+    */
     @PostMapping("/save")
     public ResponseEntity<ResponseResult<Long>> addTodo(
             @RequestBody @Validated AddTodoRequest request,
@@ -53,12 +57,12 @@ public class TodoController {
         );
     }
 
-    /*
+    /**
      * @param Long todoId (required = false)
      * @param TODO_TYPE type
      * @param String title
      * @param String content
-     * */
+     */
     @PatchMapping("/update/{id}")
     public ResponseEntity<ResponseResult<Long>> updateTodo(
             @RequestBody @Validated AddTodoRequest request,
@@ -79,6 +83,13 @@ public class TodoController {
         );
     }
 
+
+    /**
+     *
+     * @param todoId
+     * @param memberId
+     * @return
+     */
     @DeleteMapping("/{todoId}")
     public ResponseEntity<ResponseResult<Void>> addTodo(
             @PathVariable Long todoId,
