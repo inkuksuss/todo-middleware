@@ -45,16 +45,16 @@ class TodoRepositoryImplTest {
         Member member4 = memberRepository.save(new Member("test4", "test4@naver.com", "1111", MEMBER_TYPE.MEMBER));
 
 
-        Todo todo1 = new Todo(TODO_TYPE.COMMON, "1", "1");
+        Todo todo1 = new Todo(TODO_TYPE.PUBLIC, "1", "1");
         todo1.changeMember(member1);
 
-        Todo todo2 = new Todo(TODO_TYPE.COMMON, "2", "2");
+        Todo todo2 = new Todo(TODO_TYPE.PUBLIC, "2", "2");
         todo2.changeMember(member1);
 
-        Todo todo3 = new Todo(TODO_TYPE.COMMON, "3", "3");
+        Todo todo3 = new Todo(TODO_TYPE.PUBLIC, "3", "3");
         todo3.changeMember(member2);
 
-        Todo todo4 = new Todo(TODO_TYPE.COMMON, "4", "4");
+        Todo todo4 = new Todo(TODO_TYPE.PUBLIC, "4", "4");
         todo4.changeMember(member2);
 
         Todo save1 = todoRepository.save(todo1);

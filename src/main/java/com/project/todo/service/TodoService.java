@@ -34,7 +34,7 @@ public class TodoService {
 
         Member member = validMember(todoDto);
 
-        Todo todo = new Todo(todoDto.getType() != null ? todoDto.getType() : TODO_TYPE.COMMON, todoDto.getTitle(), todoDto.getContent());
+        Todo todo = new Todo(todoDto.getType() != null ? todoDto.getType() : TODO_TYPE.PRIVATE, todoDto.getTitle(), todoDto.getContent());
         todo.changeMember(member);
 
         Todo savedTodo = todoRepository.save(todo);
@@ -65,7 +65,7 @@ public class TodoService {
     }
 
     @Transactional
-    public void removeOneTodo(Long memberId, Long todoId) {
+    public void removeTodoOne(Long memberId, Long todoId) {
 
         if (todoId == null) {
             throw new IllegalArgumentException("todo id can not be null");

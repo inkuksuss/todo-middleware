@@ -59,13 +59,13 @@ class TodoServiceTest {
         TodoDto memberAndTodoDto = new TodoDto();
         memberAndTodoDto.setMemberId(savedMemberDto.getId());
         memberAndTodoDto.setTitle("test1");
-        memberAndTodoDto.setType(TODO_TYPE.COMMON);
+        memberAndTodoDto.setType(TODO_TYPE.PUBLIC);
         memberAndTodoDto.setContent("test data");
 
         TodoDto savedTodo = todoService.saveTodo(memberAndTodoDto);
 
         Assertions.assertThat(savedTodo.getTitle()).isEqualTo("test1");
-        Assertions.assertThat(savedTodo.getType()).isEqualTo(TODO_TYPE.COMMON);
+        Assertions.assertThat(savedTodo.getType()).isEqualTo(TODO_TYPE.PUBLIC);
         Assertions.assertThat(savedTodo.getContent()).isEqualTo("test data");
         Assertions.assertThat(savedTodo.getMemberId()).isEqualTo(savedMemberDto.getId());
         Assertions.assertThat(savedTodo.getCreated()).isNotNull();
@@ -91,14 +91,14 @@ class TodoServiceTest {
         updateDto.setMemberId(savedMemberDto.getId());
         updateDto.setTodoId(savedTodo.getTodoId());
         updateDto.setTitle("test2");
-        updateDto.setType(TODO_TYPE.COMMON);
+        updateDto.setType(TODO_TYPE.PUBLIC);
         updateDto.setContent("test data2");
 
         TodoDto updateTodo = todoService.updateTodo(updateDto);
 
         // 수정한 값들이 변경 되었는지
         Assertions.assertThat(updateTodo.getTitle()).isEqualTo("test2");
-        Assertions.assertThat(updateTodo.getType()).isEqualTo(TODO_TYPE.COMMON);
+        Assertions.assertThat(updateTodo.getType()).isEqualTo(TODO_TYPE.PUBLIC);
         Assertions.assertThat(updateTodo.getContent()).isEqualTo("test data2");
         Assertions.assertThat(updateTodo.getMemberId()).isEqualTo(savedTodo.getMemberId());
         Assertions.assertThat(updateTodo.getTodoId()).isEqualTo(savedTodo.getTodoId());

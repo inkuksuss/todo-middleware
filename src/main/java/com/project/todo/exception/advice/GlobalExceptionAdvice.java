@@ -6,6 +6,7 @@ import com.project.todo.domain.response.common.ResponseResult;
 import com.project.todo.exception.DuplicateEmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,15 @@ public class GlobalExceptionAdvice {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ResponseResult<Void>> handleIllegalStateException(IllegalStateException e) {
+        return new ResponseEntity<>(
+                new ResponseResult<>(RESPONSE_CODE.INVALID_STATE, e.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseResult<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(
@@ -94,6 +104,15 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<ResponseResult<Void>> handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException e) {
         return new ResponseEntity<>(
                 new ResponseResult<>(RESPONSE_CODE.INVALID_PARAMETER, e.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ResponseResult<Void>> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        return new ResponseEntity<>(
+                new ResponseResult<>(RESPONSE_CODE.NOT_UNIQUE, e.getMessage()),
                 HttpStatus.BAD_REQUEST
         );
     }

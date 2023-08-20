@@ -33,7 +33,9 @@ public class TodoController {
     * @return Long todoId
      *
     * @throws UsernameNotFoundException when can not find member
-    * @throws NoSuchElementException
+    * @throws IllegalArgumentException
+     * when member id is null,
+     * todo title or todo content is null
     */
     @PostMapping("/save")
     public ResponseEntity<ResponseResult<Long>> addTodo(
@@ -42,7 +44,7 @@ public class TodoController {
     ) {
         TodoDto dto = new TodoDto();
         dto.setMemberId(memberId);
-        dto.setType(TODO_TYPE.COMMON);
+        dto.setType(TODO_TYPE.PUBLIC);
         dto.setTitle(request.getTitle());
         dto.setContent(request.getContent());
 
@@ -72,7 +74,7 @@ public class TodoController {
         TodoDto dto = new TodoDto();
         dto.setMemberId(memberId);
         dto.setTodoId(todoId);
-        dto.setType(TODO_TYPE.COMMON);
+        dto.setType(TODO_TYPE.PUBLIC);
 
         if (StringUtils.hasText(request.getTitle())) {
             dto.setTitle(request.getTitle());
@@ -111,7 +113,7 @@ public class TodoController {
             throw new IllegalArgumentException("member id can not be null");
         }
 
-        todoService.removeOneTodo(memberId, todoId);
+        todoService.removeTodoOne(memberId, todoId);
 
         return new ResponseEntity<>(new ResponseResult<>(), HttpStatus.OK);
     }
