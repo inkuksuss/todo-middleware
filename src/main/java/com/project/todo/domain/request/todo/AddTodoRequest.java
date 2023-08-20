@@ -1,4 +1,4 @@
-package com.project.todo.domain.request;
+package com.project.todo.domain.request.todo;
 
 import com.project.todo.domain.types.TODO_TYPE;
 import jakarta.validation.constraints.NotEmpty;
@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 public class AddTodoRequest {
 
-    private Long todoId;
-
     private TODO_TYPE type;
 
+    @NotEmpty
     private String title;
 
+    @NotEmpty
     private String content;
 }

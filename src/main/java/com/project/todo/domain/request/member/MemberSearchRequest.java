@@ -1,4 +1,4 @@
-package com.project.todo.domain.request;
+package com.project.todo.domain.request.member;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;

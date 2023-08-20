@@ -8,7 +8,7 @@ import org.springframework.data.domain.AuditorAware;
 public class JpaAuditConfig {
 
     @Bean
-    public AuditorAware<Long> auditorProvider() {
+    public AuditorAware<Long> auditorAware() {
         return new AuditorAwareImpl();
     }
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,8 +31,9 @@ class TodoServiceTest {
         dto.setMemberId(null);
         dto.setTodoId(1L);
         dto.setContent("hello");
+        dto.setTitle("test");
 
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> todoService.saveTodo(dto));
+        assertThrows(IllegalArgumentException.class, () -> todoService.saveTodo(dto));
     }
 
     @Test
@@ -40,8 +42,9 @@ class TodoServiceTest {
         dto.setMemberId(1L);
         dto.setTodoId(1L);
         dto.setContent("hello");
+        dto.setTitle("test");
 
-        assertThrows(IllegalStateException.class, () -> todoService.saveTodo(dto));
+        assertThrows(UsernameNotFoundException.class, () -> todoService.saveTodo(dto));
     }
 
     @Test
@@ -69,7 +72,7 @@ class TodoServiceTest {
     }
 
     @Test
-    void updateTodo() {
+    void updateTodo() throws InterruptedException {
         MemberDto testMember = new MemberDto();
         testMember.setName("test1");
         testMember.setEmail("test@naver.com");
@@ -80,9 +83,7 @@ class TodoServiceTest {
         TodoDto memberAndTodoDto = new TodoDto();
         memberAndTodoDto.setMemberId(savedMemberDto.getId());
         memberAndTodoDto.setTitle("test1");
-        memberAndTodoDto.setType(TODO_TYPE.COMMON);
         memberAndTodoDto.setContent("test data");
-
         TodoDto savedTodo = todoService.saveTodo(memberAndTodoDto);
 
         // do update
@@ -93,7 +94,7 @@ class TodoServiceTest {
         updateDto.setType(TODO_TYPE.COMMON);
         updateDto.setContent("test data2");
 
-        TodoDto updateTodo = todoService.saveTodo(updateDto);
+        TodoDto updateTodo = todoService.updateTodo(updateDto);
 
         // 수정한 값들이 변경 되었는지
         Assertions.assertThat(updateTodo.getTitle()).isEqualTo("test2");

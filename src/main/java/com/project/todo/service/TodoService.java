@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -27,33 +28,40 @@ public class TodoService {
     @Transactional
     public TodoDto saveTodo(TodoDto todoDto) {
 
-        Optional<Member> findMember = memberRepository.findById(todoDto.getMemberId());
-
-        // NotFoundMember
-        Member member = findMember.orElseThrow(() -> new UsernameNotFoundException("user not found"));
-
-        Todo savedTodo = null;
-
-        if (todoDto.getTodoId() != null) {
-            Optional<Todo> findTodo = todoRepository.findById(todoDto.getTodoId());
-
-            // NotfoundTodo
-            Todo todo = findTodo.orElseThrow(NoSuchElementException::new);
-            todo.setType(todoDto.getType());
-            todo.setTitle(todoDto.getTitle());
-            todo.setContent(todoDto.getContent());
-            todo.setMember(member);
-
-            savedTodo = todoRepository.save(todo);
-        } else {
-            Todo newTodo = new Todo(TODO_TYPE.COMMON, todoDto.getTitle(), todoDto.getContent());
-
-            newTodo.setMember(member);
-
-            savedTodo = todoRepository.save(newTodo);
+        if (!StringUtils.hasText(todoDto.getTitle()) || !StringUtils.hasText(todoDto.getContent())) {
+            throw new IllegalArgumentException("title or content cannot be null");
         }
 
+        Member member = validMember(todoDto);
+
+        Todo todo = new Todo(todoDto.getType() != null ? todoDto.getType() : TODO_TYPE.COMMON, todoDto.getTitle(), todoDto.getContent());
+        todo.changeMember(member);
+
+        Todo savedTodo = todoRepository.save(todo);
+
         return TodoDto.fromEntity(savedTodo);
+    }
+
+    @Transactional
+    public TodoDto updateTodo(TodoDto todoDto) {
+        Member member = validMember(todoDto);
+
+        Optional<Todo> findTodo = todoRepository.findById(todoDto.getTodoId());
+        Todo todo = findTodo.orElseThrow(NoSuchElementException::new);
+
+        todo.changeMember(member);
+
+        if (StringUtils.hasText(todoDto.getTitle())) {
+            todo.setTitle(todoDto.getTitle());
+        }
+
+        if (StringUtils.hasText(todoDto.getContent())) {
+            todo.setContent(todoDto.getContent());
+        }
+
+        Todo updatedMember = todoRepository.save(todo);
+
+        return TodoDto.fromEntity(updatedMember);
     }
 
     @Transactional
@@ -67,15 +75,28 @@ public class TodoService {
             throw new IllegalArgumentException("member id can not be null");
         }
 
-        todoRepository.deleteDynamicTodo(todoId, memberId);
+        Long deleteCount = todoRepository.deleteDynamicTodo(todoId, memberId);
+
+        if (deleteCount < 1) {
+            throw new NoSuchElementException("delete target is empty");
+        }
     }
-
-
 
     public TodoDto findTodo(Long id) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
 
         return TodoDto.fromEntity(todo);
+    }
+
+    private Member validMember(TodoDto todoDto) {
+
+        if (todoDto.getMemberId() == null) {
+            throw new IllegalArgumentException("member id cannot be null");
+        }
+
+        Optional<Member> findMember = memberRepository.findById(todoDto.getMemberId());
+
+        return findMember.orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 }

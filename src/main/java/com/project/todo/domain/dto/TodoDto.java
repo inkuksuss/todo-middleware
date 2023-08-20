@@ -29,6 +29,10 @@ public class TodoDto {
 
     private LocalDateTime updated;
 
+    private Long createdBy;
+
+    private Long updatedBy;
+
     public TodoDto() {}
 
     public static TodoDto fromEntity(Todo todo) {
@@ -41,6 +45,8 @@ public class TodoDto {
         todoDto.isDelete = todo.getIsDelete();
         todoDto.created = todo.getCreated();
         todoDto.updated = todo.getUpdated();
+        todoDto.createdBy = todo.getCreatedBy();
+        todoDto.updatedBy = todo.getUpdatedBy();
 
         return todoDto;
     }

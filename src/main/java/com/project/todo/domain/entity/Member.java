@@ -66,6 +66,6 @@ public class Member extends BaseTimeEntity {
 
     public void addTodo(Todo todo) {
         this.todoList.add(todo);
-        if (todo.getMember() != this) todo.setMember(this);
+        if (todo.getMember() != this) todo.changeMember(this);
     }
 }

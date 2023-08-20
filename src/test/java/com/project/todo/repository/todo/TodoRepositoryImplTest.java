@@ -2,7 +2,6 @@ package com.project.todo.repository.todo;
 
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.entity.Todo;
-import com.project.todo.domain.types.COMMON_TYPE;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.domain.types.TODO_TYPE;
 import com.project.todo.repository.member.MemberRepository;
@@ -10,18 +9,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
-import org.glassfish.jaxb.core.v2.TODO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -54,16 +46,16 @@ class TodoRepositoryImplTest {
 
 
         Todo todo1 = new Todo(TODO_TYPE.COMMON, "1", "1");
-        todo1.setMember(member1);
+        todo1.changeMember(member1);
 
         Todo todo2 = new Todo(TODO_TYPE.COMMON, "2", "2");
-        todo2.setMember(member1);
+        todo2.changeMember(member1);
 
         Todo todo3 = new Todo(TODO_TYPE.COMMON, "3", "3");
-        todo3.setMember(member2);
+        todo3.changeMember(member2);
 
         Todo todo4 = new Todo(TODO_TYPE.COMMON, "4", "4");
-        todo4.setMember(member2);
+        todo4.changeMember(member2);
 
         Todo save1 = todoRepository.save(todo1);
         Todo save2 = todoRepository.save(todo2);

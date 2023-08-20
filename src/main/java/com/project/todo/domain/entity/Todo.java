@@ -34,6 +34,10 @@ public class Todo extends BaseEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    public Todo(Long id) {
+        this.id = id;
+    }
+
     public Todo(Long id, TODO_TYPE type, String title, String content) {
         this.id = id;
         this.type = type;
@@ -47,7 +51,7 @@ public class Todo extends BaseEntity {
         this.content = content;
     }
 
-    public void setMember(Member member) {
+    public void changeMember(Member member) {
         this.member = member;
         if (!member.getTodoList().contains(this)) member.getTodoList().add(this);
     }
