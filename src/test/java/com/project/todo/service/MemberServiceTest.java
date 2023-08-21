@@ -1,7 +1,7 @@
 package com.project.todo.service;
 
 import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.condition.MemberSearchCond;
 import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;

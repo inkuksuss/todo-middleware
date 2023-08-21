@@ -1,8 +1,7 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.FriendSimpleDynamicDto;
-import com.project.todo.domain.dto.PageDto;
-import com.project.todo.domain.dto.UpdateFriendDto;
+import com.project.todo.domain.condition.FriendSearchCond;
+import com.project.todo.domain.dto.*;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.FRIEND_TYPE;
@@ -12,15 +11,18 @@ import com.project.todo.repository.member.MemberRepository;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Validated
+@Transactional(readOnly = true)
 @Service
 public class FriendService {
 
@@ -32,7 +34,8 @@ public class FriendService {
         this.friendRepository = friendRepository;
     }
 
-    public void addFriendRelationShip(Long senderId, Long receiverId, @Nullable FRIEND_TYPE friendType) {
+    @Transactional
+    public void addFriend(Long senderId, Long receiverId, @Nullable FRIEND_TYPE friendType) {
         if (senderId == null) {
             throw new IllegalArgumentException("sender id cannot be null");
         }
@@ -66,6 +69,8 @@ public class FriendService {
         log.info("saved friend = {}", save);
     }
 
+    // TODO 수정자 타겟 id 잘못 들어왔을 때
+    @Transactional
     public void updateFriendRelationShip(@Valid UpdateFriendDto updateFriendDto) {
         FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
         friendSimpleDynamicDto.setFriendType(updateFriendDto.getFriendType() == null ? FRIEND_TYPE.COMMON : updateFriendDto.getFriendType());
@@ -77,19 +82,16 @@ public class FriendService {
             friendSimpleDynamicDto.setSenderId(updateFriendDto.getTargetId());
 
             Friend findFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
-            findFriend.setState(REQUEST_STATE.COMPLETE);
+            findFriend.accept();
 
             friendRepository.save(findFriend);
         }
         else if (updateFriendDto.getRequestType() == REQUEST_STATE.REFUSE) {
-            List<Long> idList = Arrays.asList(updateFriendDto.getModifierId(), updateFriendDto.getTargetId());
-            idList.sort((m, t) -> (int) (m - t));
-
             friendSimpleDynamicDto.setFirstMemberId(this.getFirstId(updateFriendDto.getModifierId(), updateFriendDto.getTargetId()));
             friendSimpleDynamicDto.setSecondMemberId(this.getSecondId(updateFriendDto.getModifierId(), updateFriendDto.getTargetId()));
 
             Friend findFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
-            findFriend.setState(REQUEST_STATE.REFUSE);
+            findFriend.refuse();
 
             friendRepository.save(findFriend);
         }
@@ -98,7 +100,8 @@ public class FriendService {
         }
     }
 
-    public void removeFriendRelationShip(Long modifier, Long target, @Nullable FRIEND_TYPE friendType) {
+    @Transactional
+    public void removeFriend(Long modifier, Long target, @Nullable FRIEND_TYPE friendType) {
         if (modifier == null) {
             throw new IllegalArgumentException("modifier id cannot be null");
         }
@@ -113,15 +116,28 @@ public class FriendService {
         friendSimpleDynamicDto.setFriendType(friendType == null ? FRIEND_TYPE.COMMON : friendType);
 
         Friend findFriendRelationShip = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
-        findFriendRelationShip.setState(REQUEST_STATE.DESTROY);
+        if (findFriendRelationShip == null) {
+            throw new IllegalStateException("친구 관계가 아님");
+        }
+
+        findFriendRelationShip.remove();
 
         friendRepository.save(findFriendRelationShip);
     }
 
-    // todo
-    public PageDto<Friend> getFriendList() {
-        return null;
+    public PageDto<FriendDetailDto> getFriendList(@Valid FriendSearchCond cond) {
+        PageRequest pageRequest = PageRequest.of(cond.getPage(), cond.getSize());
 
+        Page<FriendDetailDto> searchResult = friendRepository.findSearchDynamicFriend(cond, pageRequest);
+
+        log.info("serarch result = {}", searchResult);
+
+        return new PageDto<>(
+                searchResult.getTotalElements(),
+                searchResult.getTotalPages(),
+                searchResult.hasNext(),
+                searchResult.getContent()
+        );
     }
 
     private Member getReceiver(Long receiverId, List<Member> findMemberList, Member sender) {

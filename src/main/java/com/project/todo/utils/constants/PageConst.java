@@ -2,6 +2,6 @@ package com.project.todo.utils.constants;
 
 public class PageConst {
 
-    public final static short DEFAULT_PAGE_SIZE = 20;
-    public final static short DEFAULT_PAGE = 0;
+    public final static int DEFAULT_PAGE_SIZE = 20;
+    public final static int DEFAULT_PAGE = 0;
 }

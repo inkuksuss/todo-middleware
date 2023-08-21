@@ -2,7 +2,7 @@ package com.project.todo.service;
 
 import com.project.todo.config.security.provider.JwtTokenProvider;
 import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.condition.MemberSearchCond;
 import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
@@ -63,8 +63,6 @@ public class MemberService {
                 MEMBER_TYPE.MEMBER
         ));
 
-        log.info("saved = {}", savedMember.toString());
-
         return MemberDto.fromEntity(savedMember);
     }
 
@@ -100,10 +98,7 @@ public class MemberService {
     }
 
     public PageDto<MemberDto> searchMemberList(MemberSearchCond cond) {
-        PageRequest pageRequest = PageRequest.of(
-                cond.getPage() == null ? PageConst.DEFAULT_PAGE : cond.getPage(),
-                cond.getSize() == null ? PageConst.DEFAULT_PAGE_SIZE : cond.getSize()
-        );
+        PageRequest pageRequest = PageRequest.of(cond.getPage(), cond.getSize());
 
         Page<Member> memberList = memberRepository.findPagingMemberList(cond, pageRequest);
 

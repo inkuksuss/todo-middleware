@@ -4,7 +4,7 @@ import com.project.todo.aop.annotation.Login;
 import com.project.todo.config.argument_resolver.annotation.LoginId;
 import com.project.todo.config.argument_resolver.annotation.LoginMember;
 import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.condition.MemberSearchCond;
 import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.request.member.JoinRequest;

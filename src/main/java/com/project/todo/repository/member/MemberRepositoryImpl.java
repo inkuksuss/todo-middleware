@@ -1,6 +1,6 @@
 package com.project.todo.repository.member;
 
-import com.project.todo.domain.dto.MemberSearchCond;
+import com.project.todo.domain.condition.MemberSearchCond;
 import com.project.todo.domain.entity.Member;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -30,7 +30,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     @Override
     @Transactional(readOnly = true)
     public Page<Member> findPagingMemberList(MemberSearchCond cond, Pageable pageable) {
-
         List<Member> memberList = queryFactory
                 .select(member)
                 .from(member)
@@ -51,7 +50,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 )
                 .fetchOne();
 
-        return new PageImpl<>(memberList, pageable, count);
+        return new PageImpl<>(memberList, pageable, count == null ? 0 : count);
     }
 
     private BooleanExpression nameEq(String name) {

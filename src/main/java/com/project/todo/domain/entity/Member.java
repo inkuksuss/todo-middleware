@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@SQLDelete(sql = "UPDATE member SET is_delete = false WHERE member_id = ?")
+@SQLDelete(sql = "UPDATE member SET is_delete = 'Y' WHERE member_id = ?")
 @Where(clause = "is_delete = 'N'")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
