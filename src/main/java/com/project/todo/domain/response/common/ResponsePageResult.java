@@ -18,6 +18,8 @@ public class ResponsePageResult<T> {
 
     private int totalPage;
 
+    private Integer currentPage;
+
     private boolean hasNext;
 
     private List<T> data;
@@ -27,6 +29,7 @@ public class ResponsePageResult<T> {
         this.data = pageDto.getDataList();
         this.totalCount = pageDto.getTotalCount();
         this.totalPage = pageDto.getTotalPage();
+        this.currentPage = pageDto.getCurrentPage();
         this.hasNext = pageDto.isHasNext();
     }
 
@@ -37,6 +40,7 @@ public class ResponsePageResult<T> {
                 ", message='" + message + '\'' +
                 ", totalCount=" + totalCount +
                 ", totalPage=" + totalPage +
+                ", currentPage=" + currentPage +
                 ", hasNext=" + hasNext +
                 ", data=" + data +
                 '}';
