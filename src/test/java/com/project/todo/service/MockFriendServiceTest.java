@@ -1,15 +1,12 @@
 package com.project.todo.service;
 
-import com.project.todo.config.security.provider.JwtTokenProvider;
 import com.project.todo.domain.dto.FriendSimpleDynamicDto;
-import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.dto.UpdateFriendDto;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.FRIEND_TYPE;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.domain.types.REQUEST_STATE;
-import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.repository.friend.FriendRepository;
 import com.project.todo.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @Slf4j
@@ -166,7 +158,7 @@ class MockFriendServiceTest {
         updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
         updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(findFriend);
+        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
 
         // when
         friendService.updateFriendRelationShip(updateFriendDto);
@@ -190,7 +182,7 @@ class MockFriendServiceTest {
         updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
         updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(findFriend);
+        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
 
         // when
         // then
@@ -213,7 +205,7 @@ class MockFriendServiceTest {
         updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
         updateFriendDto.setRequestType(REQUEST_STATE.DESTROY);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(findFriend);
+        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
 
         // when
         // then
@@ -236,7 +228,7 @@ class MockFriendServiceTest {
         updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
         updateFriendDto.setRequestType(REQUEST_STATE.DESTROY);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(findFriend);
+        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
 
         // when
         // then
@@ -253,7 +245,7 @@ class MockFriendServiceTest {
         Friend findFriend = Friend.createFriendRelationShip(member1, member2, null);
         findFriend.accept();
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(findFriend);
+        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
 
         // when
         friendService.removeFriend(member2.getId(), member1.getId(), null);

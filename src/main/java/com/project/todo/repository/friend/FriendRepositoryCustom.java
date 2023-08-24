@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface FriendRepositoryCustom {
 
-    Friend findSimpleDynamicFriend(FriendSimpleDynamicDto dynamicDto);
+    Optional<Friend> findSimpleDynamicFriend(FriendSimpleDynamicDto dynamicDto);
 
     Page<FriendDetailDto> findSearchDynamicFriend(FriendSearchCond searchCond, Pageable pageable);
 }

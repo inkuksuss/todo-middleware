@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.project.todo.domain.entity.QFriend.*;
 import static com.project.todo.domain.entity.QMember.*;
@@ -42,7 +43,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
     }
 
     @Override
-    public Friend findSimpleDynamicFriend(FriendSimpleDynamicDto dynamicDto) {
+    public Optional<Friend> findSimpleDynamicFriend(FriendSimpleDynamicDto dynamicDto) {
         if (dynamicDto.getFirstMemberId() == null) {
             throw new IllegalArgumentException();
         }
@@ -51,16 +52,17 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
             throw new IllegalArgumentException();
         }
 
-        return queryFactory
-                .selectFrom(friend)
-                .where(
+        return Optional.ofNullable(
+                queryFactory
+                    .selectFrom(friend)
+                    .where(
                         firstIdEq(dynamicDto.getFirstMemberId()),
                         secondIdEq(dynamicDto.getSecondMemberId()),
                         senderIdEq(dynamicDto.getSenderId()),
                         requestStateEq(dynamicDto.getRequestType()),
                         friendTypeEq(dynamicDto.getFriendType())
-                )
-                .fetchOne();
+                    )
+                    .fetchOne());
     }
 
     @Override

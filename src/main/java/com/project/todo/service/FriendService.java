@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -77,7 +78,9 @@ public class FriendService {
         friendSimpleDynamicDto.setSecondMemberId(this.getSecondId(updateFriendDto.getTargetId(), updateFriendDto.getModifierId()));
         friendSimpleDynamicDto.setSenderId(updateFriendDto.getTargetId());
 
-        Friend findFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
+        Optional<Friend> findOptionalFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
+        Friend findFriend = findOptionalFriend.orElseThrow(() -> { throw new NoSuchElementException("can not find friend"); });
+
 
         if (findFriend.getState() != REQUEST_STATE.PENDING) {
             throw new IllegalStateException("not existed request");
@@ -115,7 +118,8 @@ public class FriendService {
         friendSimpleDynamicDto.setRequestType(REQUEST_STATE.COMPLETE);
         friendSimpleDynamicDto.setFriendType(friendType == null ? FRIEND_TYPE.COMMON : friendType);
 
-        Friend findFriendRelationShip = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
+        Optional<Friend> findOptionalFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
+        Friend findFriendRelationShip = findOptionalFriend.orElseThrow(() -> { throw new NoSuchElementException("can not find friend"); });
 
         findFriendRelationShip.remove();
 
