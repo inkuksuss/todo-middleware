@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter @Setter
 public class UpdateFriendDto {
 
@@ -21,4 +23,17 @@ public class UpdateFriendDto {
 
     @NotNull(message = "request type cannot be null")
     private REQUEST_STATE requestType;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UpdateFriendDto that = (UpdateFriendDto) o;
+        return Objects.equals(modifierId, that.modifierId) && Objects.equals(targetId, that.targetId) && friendType == that.friendType && requestType == that.requestType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(modifierId, targetId, friendType, requestType);
+    }
 }

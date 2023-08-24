@@ -20,12 +20,4 @@ public class FriendDetailDto {
     private String memberEmail;
 
     private LocalDateTime updated;
-
-//    public FriendDetailDto(Long friendId, Long memberId, String memberName, String memberEmail, LocalDateTime updatedBy) {
-//        this.friendId = friendId;
-//        this.memberId = memberId;
-//        this.memberName = memberName;
-//        this.memberEmail = memberEmail;
-//        this.updatedBy = updatedBy;
-//    }
 }

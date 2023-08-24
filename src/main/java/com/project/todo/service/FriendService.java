@@ -50,7 +50,7 @@ public class FriendService {
         }
 
         Member sender = getSender(senderId, findMemberList);
-        Member receiver = getReceiver(receiverId, findMemberList, sender);
+        Member receiver = getReceiver(receiverId, findMemberList);
 
         Friend friendRelationShip = Friend.createFriendRelationShip(sender, receiver, friendType);
 
@@ -65,39 +65,39 @@ public class FriendService {
             friendRelationShip = existed.reapplyFriendRelationShip(senderId, friendType);
         }
 
-        Friend save = friendRepository.save(friendRelationShip);
-        log.info("saved friend = {}", save);
+        friendRepository.save(friendRelationShip);
     }
 
-    // TODO 수정자 타겟 id 잘못 들어왔을 때
     @Transactional
     public void updateFriendRelationShip(@Valid UpdateFriendDto updateFriendDto) {
         FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
         friendSimpleDynamicDto.setFriendType(updateFriendDto.getFriendType() == null ? FRIEND_TYPE.COMMON : updateFriendDto.getFriendType());
         friendSimpleDynamicDto.setRequestType(REQUEST_STATE.PENDING);
+        friendSimpleDynamicDto.setFirstMemberId(this.getFirstId(updateFriendDto.getTargetId(), updateFriendDto.getModifierId()));
+        friendSimpleDynamicDto.setSecondMemberId(this.getSecondId(updateFriendDto.getTargetId(), updateFriendDto.getModifierId()));
+        friendSimpleDynamicDto.setSenderId(updateFriendDto.getTargetId());
+
+        Friend findFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
+
+        if (findFriend.getState() != REQUEST_STATE.PENDING) {
+            throw new IllegalStateException("not existed request");
+        }
+
+        if (!updateFriendDto.getTargetId().equals(findFriend.getSenderId())) {
+            throw new IllegalStateException("target id and sender id must be same");
+        }
 
         if (updateFriendDto.getRequestType() == REQUEST_STATE.COMPLETE) {
-            friendSimpleDynamicDto.setFirstMemberId(updateFriendDto.getTargetId());
-            friendSimpleDynamicDto.setSecondMemberId(updateFriendDto.getModifierId());
-            friendSimpleDynamicDto.setSenderId(updateFriendDto.getTargetId());
-
-            Friend findFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
             findFriend.accept();
-
-            friendRepository.save(findFriend);
         }
         else if (updateFriendDto.getRequestType() == REQUEST_STATE.REFUSE) {
-            friendSimpleDynamicDto.setFirstMemberId(this.getFirstId(updateFriendDto.getModifierId(), updateFriendDto.getTargetId()));
-            friendSimpleDynamicDto.setSecondMemberId(this.getSecondId(updateFriendDto.getModifierId(), updateFriendDto.getTargetId()));
-
-            Friend findFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
             findFriend.refuse();
-
-            friendRepository.save(findFriend);
         }
         else {
             throw new IllegalArgumentException("invalid request state");
         }
+
+        friendRepository.save(findFriend);
     }
 
     @Transactional
@@ -116,9 +116,6 @@ public class FriendService {
         friendSimpleDynamicDto.setFriendType(friendType == null ? FRIEND_TYPE.COMMON : friendType);
 
         Friend findFriendRelationShip = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
-        if (findFriendRelationShip == null) {
-            throw new IllegalStateException("친구 관계가 아님");
-        }
 
         findFriendRelationShip.remove();
 
@@ -130,8 +127,6 @@ public class FriendService {
 
         Page<FriendDetailDto> searchResult = friendRepository.findSearchDynamicFriend(cond, pageRequest);
 
-        log.info("serarch result = {}", searchResult);
-
         return new PageDto<>(
                 searchResult.getTotalElements(),
                 searchResult.getTotalPages(),
@@ -140,7 +135,7 @@ public class FriendService {
         );
     }
 
-    private Member getReceiver(Long receiverId, List<Member> findMemberList, Member sender) {
+    private Member getReceiver(Long receiverId, List<Member> findMemberList) {
         Optional<Member> receiver = findMemberList.stream().filter(m -> receiverId.equals(m.getId())).findAny();
         return receiver.orElseThrow(() -> new IllegalStateException("invalid receiver state"));
     }
@@ -161,12 +156,7 @@ public class FriendService {
     }
 
     private Long getSecondId(Long memberId1, Long memberId2) {
-        if (memberId1 > memberId2) {
-            return memberId1;
-        } else if (memberId2 > memberId1) {
-            return memberId2;
-        } else {
-            throw new IllegalStateException("modifier id is must be different with target id");
-        }
+        Long firstId = this.getFirstId(memberId1, memberId2);
+        return firstId.equals(memberId1) ? memberId2 : memberId1;
     }
 }

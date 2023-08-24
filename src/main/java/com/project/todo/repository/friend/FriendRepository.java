@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public interface FriendRepository extends CrudRepository<Friend, Long>, FriendRepositoryCustom {
 
-    @Query("select f from Friend f where f.firstMember.id = :senderId and f.secondMember.id = :receiverId and f.isDelete = 'N'")
-    Optional<Friend> findFriendRelationShip(Long senderId, Long receiverId);
+    @Query("select f from Friend f " +
+            "where (f.firstMember.id = :firstId or f.secondMember.id = :firstId) and " +
+            "(f.firstMember.id = :secondId or f.secondMember.id = :secondId) and " +
+            "f.isDelete = 'N'")
+    Optional<Friend> findFriendRelationShip(Long firstId, Long secondId);
 }

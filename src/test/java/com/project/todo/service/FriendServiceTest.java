@@ -1,7 +1,9 @@
 package com.project.todo.service;
 
 import com.project.todo.domain.condition.FriendSearchCond;
+import com.project.todo.domain.dto.FriendDetailDto;
 import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.dto.UpdateFriendDto;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
@@ -203,7 +205,7 @@ class FriendServiceTest {
     void getMyFriend() {
         // given
         Member me = null;
-        for (int i = 2; i < 11; i++) {
+        for (int i = 2; i < 12; i++) {
             Member test1 = memberRepository.findByName("test1").get();
             Member test2 = memberRepository.findByName("test" + i).get();
             friendService.addFriend(test1.getId(), test2.getId(), null);
@@ -215,12 +217,24 @@ class FriendServiceTest {
             me = test1;
         }
 
+        for (int i = 4; i < 14; i++) {
+            Member test3 = memberRepository.findByName("test3").get();
+            Member test4 = memberRepository.findByName("test" + i).get();
+            friendService.addFriend(test3.getId(), test4.getId(), null);
+            UpdateFriendDto updateFriendDto = new UpdateFriendDto();
+            updateFriendDto.setModifierId(test4.getId());
+            updateFriendDto.setTargetId(test3.getId());
+            updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
+            friendService.updateFriendRelationShip(updateFriendDto);
+        }
+
         // when
         FriendSearchCond friendSearchCond = new FriendSearchCond();
         friendSearchCond.setTargetId(me.getId());
-        friendService.getFriendList(friendSearchCond);
+        PageDto<FriendDetailDto> friendList = friendService.getFriendList(friendSearchCond);
         // then
-
+        assertThat(friendList.getDataList().size()).isEqualTo(10);
+        assertThat(friendList.getDataList().stream().map(FriendDetailDto::getMemberName)).contains("test1");
     }
 
 }

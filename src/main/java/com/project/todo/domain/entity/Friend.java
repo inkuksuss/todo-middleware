@@ -15,6 +15,8 @@ import org.springframework.util.Assert;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.*;
+
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = {"FIRST_MEMBER_ID", "SECOND_MEMBER_ID"})})
 @SQLDelete(sql = "UPDATE friend SET is_delete = false WHERE friend_id = ?")
@@ -46,20 +48,16 @@ public class Friend extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private REQUEST_STATE state;
 
-    public void setState(REQUEST_STATE state) {
-        this.state = state;
-    }
-
     public static Friend createFriendRelationShip(Member sender, Member receiver, @Nullable FRIEND_TYPE friendType) {
         Assert.notNull(sender.getId(), "senderId cannot be null");
         Assert.notNull(receiver.getId(), "receiverId cannot be null");
 
-        List<Member> list = Arrays.asList(sender, receiver);
-        list.sort((s, r) -> (int) (s.getId() - r.getId()));
+        List<Member> ids = Arrays.asList(sender, receiver);
+        ids.sort(comparingLong(Member::getId));
 
         Friend friend = new Friend();
-        friend.firstMember = list.get(0);
-        friend.secondMember = list.get(1);
+        friend.firstMember = ids.get(0);
+        friend.secondMember = ids.get(1);
         friend.senderId = sender.getId();
         friend.type = friendType == null ? FRIEND_TYPE.COMMON : friendType;
         friend.state = REQUEST_STATE.PENDING;
@@ -75,9 +73,7 @@ public class Friend extends BaseEntity {
         return this;
     }
 
-    public void accept() {
-        this.state = REQUEST_STATE.COMPLETE;
-    }
+    public void accept() { this.state = REQUEST_STATE.COMPLETE; }
 
     public void refuse() {
         this.state = REQUEST_STATE.REFUSE;
