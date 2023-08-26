@@ -15,25 +15,9 @@ public class UpdateFriendDto {
     @NotNull(message = "modifier id cannot be null")
     private Long modifierId;
 
-    @NotNull(message = "target id cannot be null")
-    private Long targetId;
-
-    @Nullable
-    private FRIEND_TYPE friendType;
+    @NotNull(message = "friend id cannot be null")
+    private Long friendId;
 
     @NotNull(message = "request type cannot be null")
     private REQUEST_STATE requestType;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UpdateFriendDto that = (UpdateFriendDto) o;
-        return Objects.equals(modifierId, that.modifierId) && Objects.equals(targetId, that.targetId) && friendType == that.friendType && requestType == that.requestType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(modifierId, targetId, friendType, requestType);
-    }
 }

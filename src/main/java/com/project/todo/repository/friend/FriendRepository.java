@@ -1,6 +1,7 @@
 package com.project.todo.repository.friend;
 
 import com.project.todo.domain.entity.Friend;
+import com.project.todo.domain.types.FRIEND_TYPE;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,10 +1,8 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.FriendSimpleDynamicDto;
 import com.project.todo.domain.dto.UpdateFriendDto;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
-import com.project.todo.domain.types.FRIEND_TYPE;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.domain.types.REQUEST_STATE;
 import com.project.todo.repository.friend.FriendRepository;
@@ -151,14 +149,15 @@ class MockFriendServiceTest {
         Member member1 = new Member(1L, "test1", "test1@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Member member2 = new Member(2L, "test2", "test2@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Friend findFriend = Friend.createFriendRelationShip(member1, member2, null);
+        findFriend.setId(1L);
+
 
         UpdateFriendDto updateFriendDto = new UpdateFriendDto();
-        updateFriendDto.setTargetId(member1.getId());
+        updateFriendDto.setFriendId(1L);
         updateFriendDto.setModifierId(member2.getId());
-        updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
         updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
+        when(friendRepository.findById(any(Long.class))).thenReturn(Optional.of(findFriend));
 
         // when
         friendService.updateFriendRelationShip(updateFriendDto);
@@ -174,15 +173,15 @@ class MockFriendServiceTest {
         Member member1 = new Member(1L, "test1", "test1@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Member member2 = new Member(2L, "test2", "test2@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Friend findFriend = Friend.createFriendRelationShip(member1, member2, null);
+        findFriend.setId(1L);
         findFriend.refuse();
 
         UpdateFriendDto updateFriendDto = new UpdateFriendDto();
-        updateFriendDto.setTargetId(member1.getId());
+        updateFriendDto.setFriendId(1L);
         updateFriendDto.setModifierId(member2.getId());
-        updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
         updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
+        when(friendRepository.findById(any(Long.class))).thenReturn(Optional.of(findFriend));
 
         // when
         // then
@@ -198,37 +197,37 @@ class MockFriendServiceTest {
         Member member2 = new Member(2L, "test2", "test2@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Friend findFriend = Friend.createFriendRelationShip(member1, member2, null);
         findFriend.refuse();
+        findFriend.setId(1L);
 
         UpdateFriendDto updateFriendDto = new UpdateFriendDto();
-        updateFriendDto.setTargetId(member1.getId());
+        updateFriendDto.setFriendId(1L);
         updateFriendDto.setModifierId(member2.getId());
-        updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
         updateFriendDto.setRequestType(REQUEST_STATE.DESTROY);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
+        when(friendRepository.findById(any(Long.class))).thenReturn(Optional.of(findFriend));
 
         // when
         // then
         assertThatThrownBy(() -> friendService.updateFriendRelationShip(updateFriendDto))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    @DisplayName("update friend change first and second")
+    @DisplayName("update friend when request sender")
     void updateFriendChangeOrder() {
         // given
         Member member1 = new Member(1L, "test1", "test1@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Member member2 = new Member(2L, "test2", "test2@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Friend findFriend = Friend.createFriendRelationShip(member2, member1, null);
         findFriend.refuse();
+        findFriend.setId(1L);
 
         UpdateFriendDto updateFriendDto = new UpdateFriendDto();
-        updateFriendDto.setTargetId(member1.getId());
+        updateFriendDto.setFriendId(1L);
         updateFriendDto.setModifierId(member2.getId());
-        updateFriendDto.setFriendType(FRIEND_TYPE.COMMON);
-        updateFriendDto.setRequestType(REQUEST_STATE.DESTROY);
+        updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
+        when(friendRepository.findById(any(Long.class))).thenReturn(Optional.of(findFriend));
 
         // when
         // then
@@ -244,11 +243,12 @@ class MockFriendServiceTest {
         Member member2 = new Member(2L, "test2", "test2@naver.com", "1111", MEMBER_TYPE.MEMBER);
         Friend findFriend = Friend.createFriendRelationShip(member1, member2, null);
         findFriend.accept();
+        findFriend.setId(1L);
 
-        when(friendRepository.findSimpleDynamicFriend(any(FriendSimpleDynamicDto.class))).thenReturn(Optional.of(findFriend));
+        when(friendRepository.findById(any(Long.class))).thenReturn(Optional.of(findFriend));
 
         // when
-        friendService.removeFriend(member2.getId(), member1.getId(), null);
+        friendService.removeFriend(member2.getId(), 1L);
 
         // then
         verify(friendRepository, times(1)).save(any(Friend.class));

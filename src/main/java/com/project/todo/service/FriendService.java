@@ -71,24 +71,17 @@ public class FriendService {
 
     @Transactional
     public void updateFriendRelationShip(@Valid UpdateFriendDto updateFriendDto) {
-        FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
-        friendSimpleDynamicDto.setFriendType(updateFriendDto.getFriendType() == null ? FRIEND_TYPE.COMMON : updateFriendDto.getFriendType());
-        friendSimpleDynamicDto.setRequestType(REQUEST_STATE.PENDING);
-        friendSimpleDynamicDto.setFirstMemberId(this.getFirstId(updateFriendDto.getTargetId(), updateFriendDto.getModifierId()));
-        friendSimpleDynamicDto.setSecondMemberId(this.getSecondId(updateFriendDto.getTargetId(), updateFriendDto.getModifierId()));
-        friendSimpleDynamicDto.setSenderId(updateFriendDto.getTargetId());
-
-        Optional<Friend> findOptionalFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
-        Friend findFriend = findOptionalFriend.orElseThrow(() -> { throw new NoSuchElementException("can not find friend"); });
-
-
-        if (findFriend.getState() != REQUEST_STATE.PENDING) {
-            throw new IllegalStateException("not existed request");
+        if (!REQUEST_STATE.COMPLETE.equals(updateFriendDto.getRequestType())
+                && !REQUEST_STATE.REFUSE.equals(updateFriendDto.getRequestType())) {
+            throw new IllegalArgumentException("update state is must be complete or refuse");
         }
 
-        if (!updateFriendDto.getTargetId().equals(findFriend.getSenderId())) {
-            throw new IllegalStateException("target id and sender id must be same");
-        }
+        Optional<Friend> findOptFriend = friendRepository.findById(updateFriendDto.getFriendId());
+        Friend findFriend = findOptFriend.orElseThrow(() -> {
+            throw new NoSuchElementException("cannot find friend relationship");
+        });
+
+        this.validBeforeUpdate(updateFriendDto, findFriend);
 
         if (updateFriendDto.getRequestType() == REQUEST_STATE.COMPLETE) {
             findFriend.accept();
@@ -103,27 +96,47 @@ public class FriendService {
         friendRepository.save(findFriend);
     }
 
+    private void validBeforeUpdate(UpdateFriendDto updateFriendDto, Friend findFriend) {
+        if (!updateFriendDto.getModifierId().equals(findFriend.getFirstMember().getId())
+                && !updateFriendDto.getModifierId().equals(findFriend.getSecondMember().getId())) {
+            throw new IllegalStateException("no permission for update");
+        }
+
+        if (updateFriendDto.getModifierId().equals(findFriend.getSenderId())) {
+            throw new IllegalStateException("can not update if modifier is sender");
+        }
+
+        if (findFriend.getState() != REQUEST_STATE.PENDING) {
+            throw new IllegalStateException("not existed request");
+        }
+    }
+
     @Transactional
-    public void removeFriend(Long modifier, Long target, @Nullable FRIEND_TYPE friendType) {
+    public void removeFriend(Long modifier, Long friendId) {
+
         if (modifier == null) {
             throw new IllegalArgumentException("modifier id cannot be null");
         }
-        if (target == null) {
-            throw new IllegalArgumentException("target id cannot be null");
+        if (friendId == null) {
+            throw new IllegalArgumentException("friend id cannot be null");
         }
 
-        FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
-        friendSimpleDynamicDto.setFirstMemberId(this.getFirstId(modifier, target));
-        friendSimpleDynamicDto.setSecondMemberId(this.getSecondId(modifier, target));
-        friendSimpleDynamicDto.setRequestType(REQUEST_STATE.COMPLETE);
-        friendSimpleDynamicDto.setFriendType(friendType == null ? FRIEND_TYPE.COMMON : friendType);
+        Optional<Friend> findOptFriend = friendRepository.findById(friendId);
+        Friend findFriend = findOptFriend.orElseThrow(() -> {
+            throw new NoSuchElementException("cannot find friend relationship");
+        });
 
-        Optional<Friend> findOptionalFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
-        Friend findFriendRelationShip = findOptionalFriend.orElseThrow(() -> { throw new NoSuchElementException("can not find friend"); });
+        if (!modifier.equals(findFriend.getFirstMember().getId())
+                && !modifier.equals(findFriend.getSecondMember().getId())) {
+            throw new IllegalStateException("no permission for update");
+        }
 
-        findFriendRelationShip.remove();
+        if (!REQUEST_STATE.COMPLETE.equals(findFriend.getState())) {
+            throw new IllegalStateException("not existed complete friend relationship");
+        }
 
-        friendRepository.save(findFriendRelationShip);
+        findFriend.remove();
+        friendRepository.save(findFriend);
     }
 
     public PageDto<FriendDetailDto> getFriendList(@Valid FriendSearchCond cond) {

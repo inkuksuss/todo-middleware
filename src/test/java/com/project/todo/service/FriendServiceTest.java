@@ -1,10 +1,7 @@
 package com.project.todo.service;
 
 import com.project.todo.domain.condition.FriendSearchCond;
-import com.project.todo.domain.dto.FriendDetailDto;
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.dto.PageDto;
-import com.project.todo.domain.dto.UpdateFriendDto;
+import com.project.todo.domain.dto.*;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.FRIEND_TYPE;
@@ -135,11 +132,15 @@ class FriendServiceTest {
         Member test1 = memberRepository.findByName("test1").get();
         Member test2 = memberRepository.findByName("test2").get();
         friendService.addFriend(test1.getId(), test2.getId(), null);
+        FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
+        friendSimpleDynamicDto.setFirstMemberId(test1.getId());
+        friendSimpleDynamicDto.setSecondMemberId(test2.getId());
+        Optional<Friend> simpleDynamicFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
 
         // when
         UpdateFriendDto updateFriendDto = new UpdateFriendDto();
         updateFriendDto.setModifierId(test2.getId());
-        updateFriendDto.setTargetId(test1.getId());
+        updateFriendDto.setFriendId(simpleDynamicFriend.get().getId());
         updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
         friendService.updateFriendRelationShip(updateFriendDto);
         // then
@@ -154,11 +155,16 @@ class FriendServiceTest {
         Member test1 = memberRepository.findByName("test1").get();
         Member test2 = memberRepository.findByName("test2").get();
         friendService.addFriend(test1.getId(), test2.getId(), null);
+        FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
+        friendSimpleDynamicDto.setFirstMemberId(test1.getId());
+        friendSimpleDynamicDto.setSecondMemberId(test2.getId());
+        Optional<Friend> simpleDynamicFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
+
 
         // when
         UpdateFriendDto updateFriendDto = new UpdateFriendDto();
         updateFriendDto.setModifierId(test2.getId());
-        updateFriendDto.setTargetId(test1.getId());
+        updateFriendDto.setFriendId(simpleDynamicFriend.get().getId());
         updateFriendDto.setRequestType(REQUEST_STATE.REFUSE);
         friendService.updateFriendRelationShip(updateFriendDto);
         // then
@@ -172,11 +178,15 @@ class FriendServiceTest {
         // given
         Member test1 = memberRepository.findByName("test1").get();
         Member test2 = memberRepository.findByName("test2").get();
-        friendService.addFriend(test1.getId(), test2.getId(), null);
         // when
+        friendService.addFriend(test1.getId(), test2.getId(), null);
+        FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
+        friendSimpleDynamicDto.setFirstMemberId(test1.getId());
+        friendSimpleDynamicDto.setSecondMemberId(test2.getId());
+        Optional<Friend> simpleDynamicFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
 
         // then
-        assertThatThrownBy(() -> friendService.removeFriend(test1.getId(), test2.getId(), null))
+        assertThatThrownBy(() -> friendService.removeFriend(test1.getId(), simpleDynamicFriend.get().getId()))
                 .isInstanceOf(IllegalStateException.class);
     }
 
@@ -187,14 +197,18 @@ class FriendServiceTest {
         Member test1 = memberRepository.findByName("test1").get();
         Member test2 = memberRepository.findByName("test2").get();
         friendService.addFriend(test1.getId(), test2.getId(), null);
+        FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
+        friendSimpleDynamicDto.setFirstMemberId(test1.getId());
+        friendSimpleDynamicDto.setSecondMemberId(test2.getId());
+        Optional<Friend> simpleDynamicFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
         UpdateFriendDto updateFriendDto = new UpdateFriendDto();
         updateFriendDto.setModifierId(test2.getId());
-        updateFriendDto.setTargetId(test1.getId());
+        updateFriendDto.setFriendId(simpleDynamicFriend.get().getId());
         updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
         friendService.updateFriendRelationShip(updateFriendDto);
 
         // when
-        friendService.removeFriend(test1.getId(), test2.getId(), null);
+        friendService.removeFriend(test1.getId(), simpleDynamicFriend.get().getId());
         // then
         Friend friendRelationShip = friendRepository.findFriendRelationShip(test1.getId(), test2.getId()).get();
         assertThat(friendRelationShip.getState()).isEqualTo(REQUEST_STATE.DESTROY);
@@ -209,9 +223,13 @@ class FriendServiceTest {
             Member test1 = memberRepository.findByName("test1").get();
             Member test2 = memberRepository.findByName("test" + i).get();
             friendService.addFriend(test1.getId(), test2.getId(), null);
+            FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
+            friendSimpleDynamicDto.setFirstMemberId(test1.getId());
+            friendSimpleDynamicDto.setSecondMemberId(test2.getId());
+            Optional<Friend> simpleDynamicFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
             UpdateFriendDto updateFriendDto = new UpdateFriendDto();
             updateFriendDto.setModifierId(test2.getId());
-            updateFriendDto.setTargetId(test1.getId());
+            updateFriendDto.setFriendId(simpleDynamicFriend.get().getId());
             updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
             friendService.updateFriendRelationShip(updateFriendDto);
             me = test1;
@@ -221,9 +239,13 @@ class FriendServiceTest {
             Member test3 = memberRepository.findByName("test3").get();
             Member test4 = memberRepository.findByName("test" + i).get();
             friendService.addFriend(test3.getId(), test4.getId(), null);
+            FriendSimpleDynamicDto friendSimpleDynamicDto = new FriendSimpleDynamicDto();
+            friendSimpleDynamicDto.setFirstMemberId(test3.getId());
+            friendSimpleDynamicDto.setSecondMemberId(test4.getId());
+            Optional<Friend> simpleDynamicFriend = friendRepository.findSimpleDynamicFriend(friendSimpleDynamicDto);
             UpdateFriendDto updateFriendDto = new UpdateFriendDto();
             updateFriendDto.setModifierId(test4.getId());
-            updateFriendDto.setTargetId(test3.getId());
+            updateFriendDto.setFriendId(simpleDynamicFriend.get().getId());
             updateFriendDto.setRequestType(REQUEST_STATE.COMPLETE);
             friendService.updateFriendRelationShip(updateFriendDto);
         }

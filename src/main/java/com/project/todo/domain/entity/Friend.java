@@ -82,4 +82,8 @@ public class Friend extends BaseEntity {
     public void remove() {
         this.state = REQUEST_STATE.DESTROY;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
