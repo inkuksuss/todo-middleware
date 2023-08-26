@@ -1,10 +1,16 @@
 package com.project.todo.controller;
 
 import com.project.todo.config.argument_resolver.annotation.LoginId;
+import com.project.todo.domain.condition.FriendSearchCond;
+import com.project.todo.domain.dto.FriendDetailDto;
+import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.dto.UpdateFriendDto;
 import com.project.todo.domain.request.friend.AddFriendRequest;
+import com.project.todo.domain.request.friend.FriendSearchRequest;
 import com.project.todo.domain.request.friend.UpdateFriendRequest;
+import com.project.todo.domain.response.common.ResponsePageResult;
 import com.project.todo.domain.response.common.ResponseResult;
+import com.project.todo.domain.types.REQUEST_STATE;
 import com.project.todo.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,5 +94,34 @@ public class FriendController {
         friendService.removeFriend(memberId, friendId);
 
         return new ResponseEntity<>(new ResponseResult<>(), HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param request get friend list with paging
+     * @param memberId login member id
+     *
+     * @return ResponsePageResult<FriendDetailDto>
+     *
+     * @throws NoSuchElementException if not found todo to delete
+     * @throws IllegalArgumentException when modifier id or friend id is null
+     */
+    @GetMapping("/")
+    public ResponseEntity<ResponsePageResult<FriendDetailDto>> getFriendList(
+            @RequestBody FriendSearchRequest request,
+            @LoginId Long memberId
+    ) {
+        FriendSearchCond cond = new FriendSearchCond();
+        cond.setTargetId(memberId);
+        cond.setSenderId(request.getSenderId());
+        cond.setFriendName(request.getFriendName());
+        cond.setFriendEmail(request.getFriendEmail());
+        cond.setRequestState(request.getRequestState());
+        cond.setPage(request.getPage());
+        cond.setSize(request.getSize());
+
+        PageDto<FriendDetailDto> friendList = friendService.getFriendList(cond);
+
+        return new ResponseEntity<>(new ResponsePageResult<>(friendList), HttpStatus.OK);
     }
 }

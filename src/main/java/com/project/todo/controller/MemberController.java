@@ -84,13 +84,4 @@ public class MemberController {
                 HttpStatus.OK
         );
     }
-
-    @Login
-    @PostMapping("/test")
-    public ResponseEntity<?> test(@LoginId Long id, @LoginMember Member member) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("id = {}", id);
-        log.info("member = {}", member);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

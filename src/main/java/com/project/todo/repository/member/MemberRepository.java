@@ -1,6 +1,7 @@
 package com.project.todo.repository.member;
 
 import com.project.todo.domain.entity.Member;
+import com.project.todo.domain.types.MEMBER_TYPE;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface MemberRepository extends CrudRepository<Member, Long>, MemberRe
 
     Optional<Member> findByEmail(String email);
 
-    List<Member> findByIdIn(List<Long> ids);
+    List<Member> findByIdInAndType(List<Long> ids, MEMBER_TYPE type);
 }

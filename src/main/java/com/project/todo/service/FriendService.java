@@ -5,6 +5,7 @@ import com.project.todo.domain.dto.*;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.FRIEND_TYPE;
+import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.domain.types.REQUEST_STATE;
 import com.project.todo.repository.friend.FriendRepository;
 import com.project.todo.repository.member.MemberRepository;
@@ -45,7 +46,7 @@ public class FriendService {
             throw new IllegalArgumentException("receiver id cannot be null");
         }
 
-        List<Member> findMemberList = memberRepository.findByIdIn(List.of(senderId, receiverId));
+        List<Member> findMemberList = memberRepository.findByIdInAndType(List.of(senderId, receiverId), MEMBER_TYPE.MEMBER);
         if (findMemberList.size() != 2) {
             throw new IllegalStateException("invalid member state");
         }
@@ -94,21 +95,6 @@ public class FriendService {
         }
 
         friendRepository.save(findFriend);
-    }
-
-    private void validBeforeUpdate(UpdateFriendDto updateFriendDto, Friend findFriend) {
-        if (!updateFriendDto.getModifierId().equals(findFriend.getFirstMember().getId())
-                && !updateFriendDto.getModifierId().equals(findFriend.getSecondMember().getId())) {
-            throw new IllegalStateException("no permission for update");
-        }
-
-        if (updateFriendDto.getModifierId().equals(findFriend.getSenderId())) {
-            throw new IllegalStateException("can not update if modifier is sender");
-        }
-
-        if (findFriend.getState() != REQUEST_STATE.PENDING) {
-            throw new IllegalStateException("not existed request");
-        }
     }
 
     @Transactional
@@ -162,18 +148,18 @@ public class FriendService {
         return sender.orElseThrow(() -> new IllegalStateException("invalid sender state"));
     }
 
-    private Long getFirstId(Long memberId1, Long memberId2) {
-        if (memberId1 > memberId2) {
-            return memberId2;
-        } else if (memberId2 > memberId1) {
-            return memberId1;
-        } else {
-            throw new IllegalStateException("modifier id is must be different with target id");
+    private void validBeforeUpdate(UpdateFriendDto updateFriendDto, Friend findFriend) {
+        if (!updateFriendDto.getModifierId().equals(findFriend.getFirstMember().getId())
+                && !updateFriendDto.getModifierId().equals(findFriend.getSecondMember().getId())) {
+            throw new IllegalStateException("no permission for update");
         }
-    }
 
-    private Long getSecondId(Long memberId1, Long memberId2) {
-        Long firstId = this.getFirstId(memberId1, memberId2);
-        return firstId.equals(memberId1) ? memberId2 : memberId1;
+        if (updateFriendDto.getModifierId().equals(findFriend.getSenderId())) {
+            throw new IllegalStateException("can not update if modifier is sender");
+        }
+
+        if (findFriend.getState() != REQUEST_STATE.PENDING) {
+            throw new IllegalStateException("not existed request");
+        }
     }
 }

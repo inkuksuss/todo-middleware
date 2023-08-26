@@ -6,6 +6,7 @@ import com.project.todo.domain.dto.FriendSimpleDynamicDto;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.QMember;
 import com.project.todo.domain.types.FRIEND_TYPE;
+import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.domain.types.REQUEST_STATE;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -82,7 +83,6 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                 .from(friend)
                 .join(friend.firstMember, firstMember)
                 .join(friend.secondMember, secondMember)
-//                .fetchJoin()
                 .where(
                         firstIdEq(searchCond.getTargetId()).or(secondIdEq(searchCond.getTargetId())),
                         senderIdEq(searchCond.getSenderId()),
@@ -107,12 +107,6 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                         memberEmailEq(searchCond.getFriendEmail())
                 )
                 .fetchOne();
-
-
-
-        for (FriendDetailDto friendDetailDto : dtoList) {
-            log.info("Data = {}", friendDetailDto);
-        }
         return new PageImpl<>(dtoList, pageable, count == null ? 0 : count);
     }
 

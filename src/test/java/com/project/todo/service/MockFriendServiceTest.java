@@ -56,7 +56,7 @@ class MockFriendServiceTest {
 
         List<Member> findMemberList = Arrays.asList(member1, member2);
 
-        when(memberRepository.findByIdIn(anyList())).thenReturn(findMemberList);
+        when(memberRepository.findByIdInAndType(anyList(), any(MEMBER_TYPE.class))).thenReturn(findMemberList);
         when(friendRepository.findFriendRelationShip(any(Long.class), any(Long.class))).thenReturn(Optional.empty());
 
         // when
@@ -75,7 +75,7 @@ class MockFriendServiceTest {
 
         List<Member> findMemberList = Arrays.asList(member1, member2);
 
-        when(memberRepository.findByIdIn(anyList())).thenReturn(findMemberList);
+        when(memberRepository.findByIdInAndType(anyList(), any(MEMBER_TYPE.class))).thenReturn(findMemberList);
         when(friendRepository.findFriendRelationShip(any(Long.class), any(Long.class))).thenReturn(Optional.empty());
 
 
@@ -94,7 +94,7 @@ class MockFriendServiceTest {
 
         List<Member> findMemberList = Arrays.asList(member1);
 
-        when(memberRepository.findByIdIn(anyList())).thenReturn(findMemberList);
+        when(memberRepository.findByIdInAndType(anyList(), any(MEMBER_TYPE.class))).thenReturn(findMemberList);
 
         // when
         // then
@@ -112,7 +112,7 @@ class MockFriendServiceTest {
 
         List<Member> findMemberList = Arrays.asList(member1, member2);
 
-        when(memberRepository.findByIdIn(anyList())).thenReturn(findMemberList);
+        when(memberRepository.findByIdInAndType(anyList(), any(MEMBER_TYPE.class))).thenReturn(findMemberList);
         when(friendRepository.findFriendRelationShip(any(Long.class), any(Long.class))).thenReturn(Optional.of(duplicate));
 
         // when
@@ -132,7 +132,7 @@ class MockFriendServiceTest {
 
         List<Member> findMemberList = Arrays.asList(member1, member2);
 
-        when(memberRepository.findByIdIn(anyList())).thenReturn(findMemberList);
+        when(memberRepository.findByIdInAndType(anyList(), any(MEMBER_TYPE.class))).thenReturn(findMemberList);
         when(friendRepository.findFriendRelationShip(any(Long.class), any(Long.class))).thenReturn(Optional.of(duplicate));
 
         // when
