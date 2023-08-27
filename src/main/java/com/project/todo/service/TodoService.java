@@ -59,6 +59,10 @@ public class TodoService {
             todo.setContent(todoDto.getContent());
         }
 
+        if (todoDto.getType() != null) {
+            todo.setType(todoDto.getType());
+        }
+
         Todo updatedMember = todoRepository.save(todo);
 
         return TodoDto.fromEntity(updatedMember);

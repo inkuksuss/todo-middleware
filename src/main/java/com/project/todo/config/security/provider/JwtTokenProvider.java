@@ -4,6 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.security.Key;
 import java.util.Collection;
 import java.util.Date;
 
@@ -22,6 +26,7 @@ public class JwtTokenProvider {
     private final String secretKey;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private Key key;
 
 
     public JwtTokenProvider(
@@ -33,6 +38,8 @@ public class JwtTokenProvider {
         this.passwordEncoder = passwordEncoder;
         this.secretKey = secretKey;
         this.tokenValidTime = 30 * 60 * 1000L;
+        byte[] bytes = Decoders.BASE64.decode(this.secretKey);
+        this.key = Keys.hmacShaKeyFor(bytes);
     }
 
     public String createToken(Long memberId, String email, Collection<? extends GrantedAuthority> roles) {
@@ -46,7 +53,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -57,7 +64,13 @@ public class JwtTokenProvider {
     }
 
     public String getUserId(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.
+                parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -66,7 +79,11 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts
+                    .parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
@@ -81,4 +98,9 @@ public class JwtTokenProvider {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
+    @PostConstruct
+    public void init() {
+        byte[] bytes = Decoders.BASE64.decode(this.secretKey);
+        this.key = Keys.hmacShaKeyFor(bytes);
+    }
 }

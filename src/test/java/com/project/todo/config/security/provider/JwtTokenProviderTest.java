@@ -36,7 +36,7 @@ class JwtTokenProviderTest {
     @BeforeEach
     void beforeEach() {
         closeable = MockitoAnnotations.openMocks(this);
-        this.jwtTokenProvider = new JwtTokenProvider(customUserService, new BCryptPasswordEncoder(), "zJ9xHgTxbsj4QQGUWDuxpWSHKq8RQVPk");
+        this.jwtTokenProvider = new JwtTokenProvider(customUserService, new BCryptPasswordEncoder(), "zJ9xHgTxbsj4QQGUWDuxpWSHKq8RQVPkashUHsuvur3oA9djvivjfij2Adnsici2nfkaz9x4sksdbij3i");
     }
 
     @AfterEach

@@ -10,7 +10,6 @@ import com.project.todo.domain.request.friend.FriendSearchRequest;
 import com.project.todo.domain.request.friend.UpdateFriendRequest;
 import com.project.todo.domain.response.common.ResponsePageResult;
 import com.project.todo.domain.response.common.ResponseResult;
-import com.project.todo.domain.types.REQUEST_STATE;
 import com.project.todo.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -74,7 +74,6 @@ public class TodoController {
         TodoDto dto = new TodoDto();
         dto.setMemberId(memberId);
         dto.setTodoId(todoId);
-        dto.setType(TODO_TYPE.PUBLIC);
 
         if (StringUtils.hasText(request.getTitle())) {
             dto.setTitle(request.getTitle());
@@ -82,6 +81,10 @@ public class TodoController {
 
         if (StringUtils.hasText(request.getContent())) {
             dto.setContent(request.getContent());
+        }
+
+        if (request.getType() != null) {
+            dto.setType(request.getType());
         }
 
         todoService.updateTodo(dto);

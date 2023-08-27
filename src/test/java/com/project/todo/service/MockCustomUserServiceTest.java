@@ -35,7 +35,7 @@ public class MockCustomUserServiceTest {
     private MemberRepository memberRepository;
 
     @Spy
-    private JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(customUserService, new BCryptPasswordEncoder(), "zJ9xHgTxbsj4QQGUWDuxpWSHKq8RQVss");
+    private JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(customUserService, new BCryptPasswordEncoder(), "zJ9xHgTxbsj4QQGUWDuxpWSHKq8RQVPkashUHsuvur3oA9djvivjfij2Adnsici2nfkaz9x4sksdbij3i");
 
     private AutoCloseable closeable;
 

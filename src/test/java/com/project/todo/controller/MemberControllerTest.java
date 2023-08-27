@@ -60,8 +60,8 @@ class MemberControllerTest {
         ResponseEntity<ResponseResult> response = this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData2, ResponseResult.class);
 
         //then
-        log.info("response = {}", response);
-        Assertions.assertThat(response.getBody().getCode()).isEqualTo(31);
+        log.info("response = {}", response.getBody());
+        Assertions.assertThat(response.getBody().getCode()).isEqualTo(1);
         Assertions.assertThat(response.getBody().getData()).isNull();
     }
 

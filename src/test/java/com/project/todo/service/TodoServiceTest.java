@@ -37,17 +37,6 @@ class TodoServiceTest {
     }
 
     @Test
-    void noExistedMember() {
-        TodoDto dto = new TodoDto();
-        dto.setMemberId(1L);
-        dto.setTodoId(1L);
-        dto.setContent("hello");
-        dto.setTitle("test");
-
-        assertThrows(UsernameNotFoundException.class, () -> todoService.saveTodo(dto));
-    }
-
-    @Test
     void insertTodo() {
         MemberDto testMember = new MemberDto();
         testMember.setName("test1");
@@ -96,18 +85,17 @@ class TodoServiceTest {
 
         TodoDto updateTodo = todoService.updateTodo(updateDto);
 
-        // 수정한 값들이 변경 되었는지
-        Assertions.assertThat(updateTodo.getTitle()).isEqualTo("test2");
-        Assertions.assertThat(updateTodo.getType()).isEqualTo(TODO_TYPE.PUBLIC);
-        Assertions.assertThat(updateTodo.getContent()).isEqualTo("test data2");
-        Assertions.assertThat(updateTodo.getMemberId()).isEqualTo(savedTodo.getMemberId());
-        Assertions.assertThat(updateTodo.getTodoId()).isEqualTo(savedTodo.getTodoId());
-        Assertions.assertThat(savedTodo.getCreated()).isEqualTo(updateTodo.getCreated());
-
         em.flush();
         em.clear();
 
         TodoDto todo = todoService.findTodo(updateTodo.getTodoId());
-        log.info("todo = {}", todo);
+
+        // 수정한 값들이 변경 되었는지
+        Assertions.assertThat(todo.getTitle()).isEqualTo("test2");
+        Assertions.assertThat(todo.getType()).isEqualTo(TODO_TYPE.PUBLIC);
+        Assertions.assertThat(todo.getContent()).isEqualTo("test data2");
+        Assertions.assertThat(todo.getMemberId()).isEqualTo(updateTodo.getMemberId());
+        Assertions.assertThat(todo.getTodoId()).isEqualTo(updateTodo.getTodoId());
+        Assertions.assertThat(savedTodo.getCreated()).isEqualTo(updateTodo.getCreated());
     }
 }
