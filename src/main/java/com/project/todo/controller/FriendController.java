@@ -3,6 +3,7 @@ package com.project.todo.controller;
 import com.project.todo.config.argument_resolver.annotation.LoginId;
 import com.project.todo.domain.condition.FriendSearchCond;
 import com.project.todo.domain.dto.FriendDetailDto;
+import com.project.todo.domain.dto.MemberContext;
 import com.project.todo.domain.dto.PageDto;
 import com.project.todo.domain.dto.UpdateFriendDto;
 import com.project.todo.domain.request.friend.AddFriendRequest;
@@ -15,9 +16,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -98,20 +102,19 @@ public class FriendController {
     /**
      *
      * @param request get friend list with paging
-     * @param memberId login member id
      *
      * @return ResponsePageResult<FriendDetailDto>
      *
      * @throws NoSuchElementException if not found todo to delete
      * @throws IllegalArgumentException when modifier id or friend id is null
      */
-    @GetMapping("/")
+    @GetMapping("/{targetId}")
     public ResponseEntity<ResponsePageResult<FriendDetailDto>> getFriendList(
             @RequestBody FriendSearchRequest request,
-            @LoginId Long memberId
+            @PathVariable Long targetId
     ) {
         FriendSearchCond cond = new FriendSearchCond();
-        cond.setTargetId(memberId);
+        cond.setTargetId(targetId);
         cond.setSenderId(request.getSenderId());
         cond.setFriendName(request.getFriendName());
         cond.setFriendEmail(request.getFriendEmail());

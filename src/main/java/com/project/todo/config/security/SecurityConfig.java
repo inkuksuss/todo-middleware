@@ -16,6 +16,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -27,6 +30,9 @@ public class SecurityConfig {
 
     @Autowired
     private CustomUserService customUserService;
+
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Value("${secret-key}")
     private String secretKey;
@@ -56,14 +62,23 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable);
         http
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+        http.oauth2Client(oauth2 -> {
+            oauth2.authorizationCodeGrant(
+                    authorizationCodeGrantConfigurer -> authorizationCodeGrantConfigurer.authorizationRequestResolver(authorizationRequestResolver()));
+        });
         http.oauth2Client(Customizer.withDefaults());
-
         http.addFilterBefore(
                 new JwtAuthenticationFilter(jwtTokenProvider()),
                 UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public OAuth2AuthorizationRequestResolver authorizationRequestResolver() {
+        DefaultOAuth2AuthorizationRequestResolver defaultOAuth2AuthorizationRequestResolver = new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, "/oauth2/authorization");
+        defaultOAuth2AuthorizationRequestResolver.setAuthorizationRequestCustomizer(request -> request.state("aaaaaaaaaaaaaaa"));
+        return defaultOAuth2AuthorizationRequestResolver;
     }
 
     @Bean

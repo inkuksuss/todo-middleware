@@ -92,6 +92,7 @@ public class FriendRepositoryImpl implements FriendRepositoryCustom {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(friend.updated.desc())
                 .fetch();
 
         Long count = queryFactory

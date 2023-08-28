@@ -38,8 +38,7 @@ public class JwtTokenProvider {
         this.passwordEncoder = passwordEncoder;
         this.secretKey = secretKey;
         this.tokenValidTime = 30 * 60 * 1000L;
-        byte[] bytes = Decoders.BASE64.decode(this.secretKey);
-        this.key = Keys.hmacShaKeyFor(bytes);
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secretKey));
     }
 
     public String createToken(Long memberId, String email, Collection<? extends GrantedAuthority> roles) {
@@ -96,11 +95,5 @@ public class JwtTokenProvider {
 
     public boolean checkPasswordMatch(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
-    }
-
-    @PostConstruct
-    public void init() {
-        byte[] bytes = Decoders.BASE64.decode(this.secretKey);
-        this.key = Keys.hmacShaKeyFor(bytes);
     }
 }
