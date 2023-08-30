@@ -2,13 +2,14 @@ package com.project.todo.config.security;
 
 import com.project.todo.config.security.filter.JwtAuthenticationFilter;
 import com.project.todo.config.security.provider.JwtTokenProvider;
-import com.project.todo.service.CustomUserService;
+import com.project.todo.service.security.CustomUserService;
+import com.project.todo.service.security.oauth2.CustomOAuthUserService;
+import com.project.todo.service.security.oauth2.CustomOidcUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -33,6 +34,12 @@ public class SecurityConfig {
 
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
+
+    @Autowired
+    CustomOAuthUserService customOAuth2UserService;
+
+    @Autowired
+    CustomOidcUserService customOidcUserService;
 
     @Value("${secret-key}")
     private String secretKey;
@@ -66,7 +73,15 @@ public class SecurityConfig {
             oauth2.authorizationCodeGrant(
                     authorizationCodeGrantConfigurer -> authorizationCodeGrantConfigurer.authorizationRequestResolver(authorizationRequestResolver()));
         });
-        http.oauth2Client(Customizer.withDefaults());
+        http.oauth2Login(config -> {
+            config.userInfoEndpoint(
+                    userConfig -> {
+                        userConfig
+                                .oidcUserService(customOidcUserService)
+                                .userService(customOAuth2UserService);
+                    }
+            );
+        });
         http.addFilterBefore(
                 new JwtAuthenticationFilter(jwtTokenProvider()),
                 UsernamePasswordAuthenticationFilter.class);

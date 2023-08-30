@@ -15,19 +15,14 @@ import java.util.Enumeration;
 @RestController
 public class OAuthController {
 
-    @GetMapping("/oauth/code/google")
-    public void test(HttpServletRequest request) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-
-        Enumeration<String> parameterNames = request.getParameterNames();
-        parameterNames.asIterator().forEachRemaining(name -> log.info("request.getParameter(name) = {}, {}", name, request.getParameter(name)));
-//        log.info("request = {}", request.getParameter("code"));
-    }
-
     @GetMapping("/google")
     public void redirectTest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Enumeration<String> parameterNames = request.getParameterNames();
+        parameterNames.asIterator().forEachRemaining(name -> log.info("request.getParameter(name) = {}, {}", name, request.getParameter(name)));
+    }
+
+    @GetMapping("/oauth2/authorization/google")
+    public void redirectTest2(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Enumeration<String> parameterNames = request.getParameterNames();
         parameterNames.asIterator().forEachRemaining(name -> log.info("request.getParameter(name) = {}, {}", name, request.getParameter(name)));
     }

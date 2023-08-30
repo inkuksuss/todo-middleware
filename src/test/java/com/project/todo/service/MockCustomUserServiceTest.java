@@ -5,6 +5,7 @@ import com.project.todo.domain.dto.MemberContext;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.repository.member.MemberRepository;
+import com.project.todo.service.security.CustomUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

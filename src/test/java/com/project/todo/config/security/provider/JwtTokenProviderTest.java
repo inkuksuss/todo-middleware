@@ -1,25 +1,21 @@
 package com.project.todo.config.security.provider;
 
 import com.project.todo.domain.types.MEMBER_TYPE;
-import com.project.todo.service.CustomUserService;
+import com.project.todo.service.security.CustomUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collection;
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @Slf4j

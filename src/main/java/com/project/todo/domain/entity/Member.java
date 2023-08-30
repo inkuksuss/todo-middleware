@@ -1,5 +1,6 @@
 package com.project.todo.domain.entity;
 
+import com.project.todo.domain.types.LOGIN_PROVIDER;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,10 @@ public class Member extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private MEMBER_TYPE type;
 
+    @Column(length = 50)
+    @Enumerated(value = EnumType.STRING)
+    private LOGIN_PROVIDER provider;
+
     @OneToMany(mappedBy = "member")
     private List<Todo> todoList = new ArrayList<>();
 
@@ -43,10 +49,25 @@ public class Member extends BaseTimeEntity {
         this.email = email;
         this.password = password;
         this.type = type;
+        this.provider = LOGIN_PROVIDER.TODO;
     }
 
-    public Member(Long id, String name, String email, String password, MEMBER_TYPE type) {
-        this(name, email, password, type);
+    public static Member createOAuthMember(String name, String password, String email, LOGIN_PROVIDER provider) {
+        Assert.notNull(name, "이름은 필수입니다.");
+        Assert.notNull(password, "비밀번호는 필수입니다.");
+        Assert.notNull(email, "이메일은 필수입니다.");
+        Assert.notNull(provider, "서비스 제공자는 필수입니다.");
+        Member member = new Member();
+        member.name = name;
+        member.password = password;
+        member.email = email;
+        member.provider = provider;
+        member.type = MEMBER_TYPE.MEMBER;
+
+        return member;
+    }
+
+    public void forceChangeId(Long id) {
         this.id = id;
     }
 
@@ -63,6 +84,10 @@ public class Member extends BaseTimeEntity {
     }
 
     public void setType(MEMBER_TYPE type) { this.type = type; }
+
+    public void setProvider(LOGIN_PROVIDER provider) {
+        this.provider = provider;
+    }
 
     public void addTodo(Todo todo) {
         this.todoList.add(todo);

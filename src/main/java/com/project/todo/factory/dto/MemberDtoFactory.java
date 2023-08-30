@@ -1,4 +1,4 @@
-package com.project.todo.factory.dtofactory;
+package com.project.todo.factory.dto;
 
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.entity.Member;

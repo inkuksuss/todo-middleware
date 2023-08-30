@@ -1,4 +1,4 @@
-package com.project.todo.service;
+package com.project.todo.service.security;
 
 import com.project.todo.domain.dto.MemberContext;
 import com.project.todo.domain.entity.Member;

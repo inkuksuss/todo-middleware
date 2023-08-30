@@ -1,4 +1,4 @@
-package com.project.todo.factory.dtofactory;
+package com.project.todo.factory.dto;
 
 public interface DtoFactory<T, S> {
 
