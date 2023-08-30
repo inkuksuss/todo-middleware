@@ -1,12 +1,11 @@
 package com.project.todo.domain.model;
 
+import com.project.todo.domain.types.LOGIN_PROVIDER;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractProviderUser implements ProviderUser {
@@ -34,8 +33,11 @@ public abstract class AbstractProviderUser implements ProviderUser {
     }
 
     @Override
-    public String getProvider() {
-        return clientRegistration.getRegistrationId();
+    public LOGIN_PROVIDER getProvider() {
+        Optional<LOGIN_PROVIDER> findOne = Arrays.stream(LOGIN_PROVIDER.values())
+                .filter(provider -> provider.name().toLowerCase().equals(clientRegistration.getRegistrationId()))
+                .findAny();
+        return findOne.orElseThrow(() -> { throw new IllegalStateException("제공하지 않는 서비스입니다"); });
     }
 
     @Override

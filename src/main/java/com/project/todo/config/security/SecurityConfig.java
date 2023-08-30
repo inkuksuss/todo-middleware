@@ -1,6 +1,7 @@
 package com.project.todo.config.security;
 
 import com.project.todo.config.security.filter.JwtAuthenticationFilter;
+import com.project.todo.config.security.handler.OAuthAuthenticationSuccessHandler;
 import com.project.todo.config.security.provider.JwtTokenProvider;
 import com.project.todo.service.security.CustomUserService;
 import com.project.todo.service.security.oauth2.CustomOAuthUserService;
@@ -15,12 +16,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -45,16 +46,6 @@ public class SecurityConfig {
     private String secretKey;
 
     @Bean
-    public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider(customUserService, passwordEncoder(), secretKey);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> {
@@ -69,11 +60,8 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable);
         http
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.oauth2Client(oauth2 -> {
-            oauth2.authorizationCodeGrant(
-                    authorizationCodeGrantConfigurer -> authorizationCodeGrantConfigurer.authorizationRequestResolver(authorizationRequestResolver()));
-        });
         http.oauth2Login(config -> {
+            config.redirectionEndpoint(redirectionConfig -> redirectionConfig.baseUri("/oauth/code/**"));
             config.userInfoEndpoint(
                     userConfig -> {
                         userConfig
@@ -81,19 +69,35 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService);
                     }
             );
+//            config.defaultSuccessUrl("http://localhost:4000/login");
+            config.successHandler(oAuthAuthenticationSuccessHandler());
         });
         http.addFilterBefore(
                 new JwtAuthenticationFilter(jwtTokenProvider()),
                 UsernamePasswordAuthenticationFilter.class);
 
+
         return http.build();
     }
 
     @Bean
-    public OAuth2AuthorizationRequestResolver authorizationRequestResolver() {
-        DefaultOAuth2AuthorizationRequestResolver defaultOAuth2AuthorizationRequestResolver = new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, "/oauth2/authorization");
-        defaultOAuth2AuthorizationRequestResolver.setAuthorizationRequestCustomizer(request -> request.state("aaaaaaaaaaaaaaa"));
-        return defaultOAuth2AuthorizationRequestResolver;
+    public OAuthAuthenticationSuccessHandler oAuthAuthenticationSuccessHandler() {
+        return new OAuthAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    public JwtTokenProvider jwtTokenProvider() {
+        return new JwtTokenProvider(customUserService, passwordEncoder(), secretKey);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public GrantedAuthoritiesMapper customAuthorityMapper() {
+        return new CustomAuthorityMapper();
     }
 
     @Bean
