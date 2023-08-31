@@ -45,26 +45,15 @@ public class Member extends BaseTimeEntity {
     private List<Todo> todoList = new ArrayList<>();
 
     public Member(String name, String email, String password, MEMBER_TYPE type) {
+        this(name, email, password, type, LOGIN_PROVIDER.TODO);
+    }
+
+    public Member(String name, String email, String password, MEMBER_TYPE type, LOGIN_PROVIDER provider) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.type = type;
-        this.provider = LOGIN_PROVIDER.TODO;
-    }
-
-    public static Member createOAuthMember(String name, String password, String email, LOGIN_PROVIDER provider) {
-        Assert.notNull(name, "이름은 필수입니다.");
-        Assert.notNull(password, "비밀번호는 필수입니다.");
-        Assert.notNull(email, "이메일은 필수입니다.");
-        Assert.notNull(provider, "서비스 제공자는 필수입니다.");
-        Member member = new Member();
-        member.name = name;
-        member.password = password;
-        member.email = email;
-        member.provider = provider;
-        member.type = MEMBER_TYPE.MEMBER;
-
-        return member;
+        this.provider = provider;
     }
 
     public void forceChangeId(Long id) {

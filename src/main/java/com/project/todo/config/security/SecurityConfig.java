@@ -69,7 +69,6 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService);
                     }
             );
-//            config.defaultSuccessUrl("http://localhost:4000/login");
             config.successHandler(oAuthAuthenticationSuccessHandler());
         });
         http.addFilterBefore(
@@ -82,7 +81,7 @@ public class SecurityConfig {
 
     @Bean
     public OAuthAuthenticationSuccessHandler oAuthAuthenticationSuccessHandler() {
-        return new OAuthAuthenticationSuccessHandler();
+        return new OAuthAuthenticationSuccessHandler(jwtTokenProvider());
     }
 
     @Bean

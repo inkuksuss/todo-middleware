@@ -8,7 +8,6 @@ import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.exception.DuplicateEmailException;
 import com.project.todo.repository.member.MemberRepository;
-import com.project.todo.utils.constants.PageConst;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

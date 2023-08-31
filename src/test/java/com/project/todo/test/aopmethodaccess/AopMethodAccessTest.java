@@ -1,5 +1,6 @@
 package com.project.todo.test.aopmethodaccess;
 
+import com.project.todo.common.test.aopmethodaccess.AopService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

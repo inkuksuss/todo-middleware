@@ -1,7 +1,11 @@
 package com.project.todo.service.security;
 
+import com.project.todo.common.factory.authentication.MemberAuthenticationFactory;
+import com.project.todo.common.factory.authentication.MemberAuthenticationFactoryForm;
 import com.project.todo.domain.dto.MemberContext;
 import com.project.todo.domain.entity.Member;
+import com.project.todo.domain.model.member.MemberAuthentication;
+import com.project.todo.domain.model.member.MemberPrincipal;
 import com.project.todo.repository.member.MemberRepository;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,8 +39,10 @@ public class CustomUserService implements UserDetailsService {
             Member member = findMember
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
+            MemberAuthenticationFactory factory = new MemberAuthenticationFactory();
+            MemberPrincipal memberPrincipal = factory.createMemberPrincipal(MemberAuthenticationFactoryForm.createTodoMemberForm(member));
 
-            return new MemberContext(member, Set.of(new SimpleGrantedAuthority(member.getType().getRole())));
+            return new MemberAuthentication(memberPrincipal);
         } catch (NumberFormatException e) {
             throw new InsufficientAuthenticationException("invalid token");
         }

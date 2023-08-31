@@ -1,6 +1,7 @@
 package com.project.todo.domain.dto;
 
 import com.project.todo.domain.entity.Member;
+import com.project.todo.domain.types.LOGIN_PROVIDER;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -28,6 +29,8 @@ public class MemberDto {
 
     private MEMBER_TYPE type;
 
+    private LOGIN_PROVIDER provider;
+
     private List<TodoDto> todoList = new ArrayList<>();
 
     private String isDelete;
@@ -46,6 +49,7 @@ public class MemberDto {
         memberDto.name = member.getName();
         memberDto.email = member.getEmail();
         memberDto.type = member.getType();
+        memberDto.provider = member.getProvider();
         memberDto.isDelete = member.getIsDelete();
         memberDto.created = member.getCreated();
         memberDto.updated = member.getUpdated();
@@ -80,6 +84,8 @@ public class MemberDto {
     public void setIsDelete(String isDelete) {
         this.isDelete = isDelete;
     }
+
+    public void setProvider(LOGIN_PROVIDER provider) { this.provider = provider; }
 
     public void setCreated(LocalDateTime created) {
         this.created = created;

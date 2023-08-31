@@ -1,12 +1,8 @@
 package com.project.todo.controller;
 
-import com.project.todo.aop.annotation.Login;
-import com.project.todo.config.argument_resolver.annotation.LoginId;
-import com.project.todo.config.argument_resolver.annotation.LoginMember;
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.condition.MemberSearchCond;
 import com.project.todo.domain.dto.PageDto;
-import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.request.member.JoinRequest;
 import com.project.todo.domain.request.member.LoginRequest;
 import com.project.todo.domain.request.member.MemberSearchRequest;
@@ -18,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

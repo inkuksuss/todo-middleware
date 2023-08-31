@@ -54,7 +54,8 @@ public class MockCustomUserServiceTest {
     @DisplayName("loadUserByUsername() 정상")
     void loadUserByUsername() {
         //given
-        Member testMember = new Member(1L, "test1", "test@naver.com", "1111", MEMBER_TYPE.MEMBER);
+        Member testMember = new Member( "test1", "test@naver.com", "1111", MEMBER_TYPE.MEMBER);
+        testMember.forceChangeId(1L);
         Optional<Member> mockResponse = Optional.of(testMember);
         when(memberRepository.findById(anyLong())).thenReturn(mockResponse);
 

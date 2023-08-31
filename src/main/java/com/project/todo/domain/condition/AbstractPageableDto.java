@@ -1,6 +1,6 @@
 package com.project.todo.domain.condition;
 
-import com.project.todo.utils.constants.PageConst;
+import com.project.todo.common.utils.constants.PageConst;
 
 public abstract class AbstractPageableDto implements PageableDto {
 
