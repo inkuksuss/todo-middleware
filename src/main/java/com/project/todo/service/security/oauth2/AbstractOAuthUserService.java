@@ -31,12 +31,9 @@ public abstract class AbstractOAuthUserService {
 
         Optional<Member> member = this.memberRepository.findByEmail(memberPrincipal.getEmail());
         Member savedMember;
-        if (member.isPresent()) {
-            savedMember = this.updateIfNoExisted(memberPrincipal, member.get());
-        }
-        else {
-            savedMember = saveMember(memberPrincipal);
-        }
+        savedMember = member
+                .map(value -> this.updateIfNoExisted(memberPrincipal, value))
+                .orElseGet(() -> saveMember(memberPrincipal));
 
         if (memberPrincipal.getMember().getId() == null) {
             memberPrincipal.getMember().setId(savedMember.getId());
