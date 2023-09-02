@@ -8,15 +8,15 @@ import org.springframework.util.Assert;
 
 import java.util.*;
 
-public abstract class AbstractMemberPrincipal implements MemberPrincipal {
+public abstract class AbstractMemberHolder implements MemberHolder {
 
-    protected final MemberDto member;
+    private MemberDto member;
 
     protected final Map<String, Object> attributes;
 
     protected List<? extends GrantedAuthority> authorities;
 
-    public AbstractMemberPrincipal(MemberDto member, Collection<? extends GrantedAuthority> authorities, @Nullable Map<String, Object> attributes) {
+    public AbstractMemberHolder(MemberDto member, Collection<? extends GrantedAuthority> authorities, @Nullable Map<String, Object> attributes) {
         Assert.notNull(member, "member cannot be null");
         Assert.notNull(authorities, "authorities cannot be null");
         this.member = member;
@@ -27,6 +27,11 @@ public abstract class AbstractMemberPrincipal implements MemberPrincipal {
     @Override
     public MemberDto getMember() {
         return this.member;
+    }
+
+    @Override
+    public void updateMember(MemberDto memberDto) {
+        this.member = memberDto;
     }
 
     @Override

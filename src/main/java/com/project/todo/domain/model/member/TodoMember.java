@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class TodoMember extends AbstractMemberPrincipal {
+public class TodoMember extends AbstractMemberHolder {
 
     public TodoMember(MemberDto member, Collection<? extends GrantedAuthority> authorities) {
         super(member, authorities, null);

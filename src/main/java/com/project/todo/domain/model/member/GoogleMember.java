@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class GoogleMember extends AbstractMemberPrincipal {
+public class GoogleMember extends AbstractMemberHolder {
 
     public GoogleMember(MemberDto member, Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
         super(member, authorities, attributes);

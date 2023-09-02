@@ -3,7 +3,7 @@ package com.project.todo.service.security.oauth2;
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactoryForm;
 import com.project.todo.domain.dto.MemberDto;
 import com.project.todo.domain.entity.Member;
-import com.project.todo.domain.model.member.MemberPrincipal;
+import com.project.todo.domain.model.member.MemberHolder;
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactory;
 import com.project.todo.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -21,32 +21,30 @@ public abstract class AbstractOAuthUserService {
         this.memberRepository = memberRepository;
     }
 
-    protected MemberPrincipal getMemberPrincipal(MemberAuthenticationFactoryForm form) {
+    protected MemberHolder getMemberPrincipal(MemberAuthenticationFactoryForm form) {
         MemberAuthenticationFactory oauthUserFactory = new MemberAuthenticationFactory();
         return oauthUserFactory.createMemberPrincipal(form);
     }
 
-    protected void processSave(MemberPrincipal memberPrincipal) {
-        Assert.notNull(memberPrincipal, "memberPrincipal cannot be null");
+    protected void processSave(MemberHolder memberHolder) {
+        Assert.notNull(memberHolder, "memberPrincipal cannot be null");
 
-        Optional<Member> member = this.memberRepository.findByEmail(memberPrincipal.getEmail());
+        Optional<Member> member = this.memberRepository.findByEmail(memberHolder.getEmail());
         Member savedMember;
         savedMember = member
-                .map(value -> this.updateIfNoExisted(memberPrincipal, value))
-                .orElseGet(() -> saveMember(memberPrincipal));
+                .map(value -> this.updateIfNoExisted(memberHolder, value))
+                .orElseGet(() -> saveMember(memberHolder));
 
-        if (memberPrincipal.getMember().getId() == null) {
-            memberPrincipal.getMember().setId(savedMember.getId());
-        }
+        memberHolder.updateMember(MemberDto.fromEntity(savedMember));
     }
 
-    private Member updateIfNoExisted(MemberPrincipal memberPrincipal, Member savedMember) {
-        if (memberPrincipal.getProvider() == savedMember.getProvider()) {
-            savedMember.setEmail(memberPrincipal.getMember().getEmail());
-            savedMember.setName(memberPrincipal.getMember().getName());
-            savedMember.setPassword(memberPrincipal.getMember().getPassword());
-            savedMember.setProvider(memberPrincipal.getMember().getProvider());
-            savedMember.setType(memberPrincipal.getMember().getType());
+    private Member updateIfNoExisted(MemberHolder memberHolder, Member savedMember) {
+        if (memberHolder.getProvider() == savedMember.getProvider()) {
+            savedMember.setEmail(memberHolder.getMember().getEmail());
+            savedMember.setName(memberHolder.getMember().getName());
+            savedMember.setPassword(memberHolder.getMember().getPassword());
+            savedMember.setProvider(memberHolder.getMember().getProvider());
+            savedMember.setType(memberHolder.getMember().getType());
             return memberRepository.save(savedMember);
         }
         else {
@@ -54,8 +52,8 @@ public abstract class AbstractOAuthUserService {
         }
     }
 
-    private Member saveMember(MemberPrincipal memberPrincipal) {
-        MemberDto memberDto = memberPrincipal.getMember();
+    private Member saveMember(MemberHolder memberHolder) {
+        MemberDto memberDto = memberHolder.getMember();
         return memberRepository.save(new Member(
                 memberDto.getName(),
                 memberDto.getEmail(),

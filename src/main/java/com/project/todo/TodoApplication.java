@@ -1,5 +1,6 @@
 package com.project.todo;
 
+import com.project.todo.config.security.provider.JwtTokenProvider;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.repository.member.MemberRepository;
@@ -20,17 +21,20 @@ public class TodoApplication {
 	@Autowired
 	MemberRepository memberRepository;
 
+	@Autowired
+	JwtTokenProvider jwtTokenProvider;
+
 	public static void main(String[] args) {
 		SpringApplication.run(TodoApplication.class, args);
 	}
 
 
 
-//	@EventListener(ApplicationReadyEvent.class)
-//	@Transactional
-//	public void initData() {
-//		for (int i = 0; i < 100; i++) {
-//			memberRepository.save(new Member("member" + i, "test@naver.com", "1111", MEMBER_TYPE.MEMBER));
-//		}
-//	}
+	@EventListener(ApplicationReadyEvent.class)
+	@Transactional
+	public void initData() {
+		Member testMember = new Member("test1", "test@naver.com", jwtTokenProvider.encryptPassword("1111"), MEMBER_TYPE.MEMBER);
+		memberRepository.save(testMember);
+
+	}
 }

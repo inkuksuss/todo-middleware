@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class NaverMember extends AbstractMemberPrincipal {
+public class NaverMember extends AbstractMemberHolder {
 
     public NaverMember(MemberDto member, Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
         super(member, authorities, attributes);

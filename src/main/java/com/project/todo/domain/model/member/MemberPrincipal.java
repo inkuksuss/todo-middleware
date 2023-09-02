@@ -1,28 +1,77 @@
 package com.project.todo.domain.model.member;
 
 import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.entity.Member;
-import com.project.todo.domain.types.LOGIN_PROVIDER;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
-public interface MemberPrincipal {
+public record MemberPrincipal(MemberHolder memberHolder) implements UserDetails, OAuth2User, OidcUser {
 
-    MemberDto getMember();
+    public MemberDto getMember() { return memberHolder.getMember(); }
 
-    Long getId();
+    @Override
+    public String getName() {
+        return memberHolder.getUsername();
+    }
 
-    String getUsername();
+    @Override
+    public Map<String, Object> getAttributes() {
+        return memberHolder.getAttributes();
+    }
 
-    String getPassword();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return memberHolder.getAuthorities();
+    }
 
-    String getEmail();
+    @Override
+    public String getPassword() {
+        return memberHolder.getPassword();
+    }
 
-    LOGIN_PROVIDER getProvider();
+    @Override
+    public String getUsername() {
+        return memberHolder.getUsername();
+    }
 
-    Map<String, Object> getAttributes();
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-    List<? extends GrantedAuthority> getAuthorities();
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Map<String, Object> getClaims() {
+        return null;
+    }
+
+    @Override
+    public OidcUserInfo getUserInfo() {
+        return null;
+    }
+
+    @Override
+    public OidcIdToken getIdToken() {
+        return null;
+    }
 }

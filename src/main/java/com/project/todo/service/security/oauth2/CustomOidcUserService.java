@@ -1,8 +1,8 @@
 package com.project.todo.service.security.oauth2;
 
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactoryForm;
-import com.project.todo.domain.model.member.MemberAuthentication;
 import com.project.todo.domain.model.member.MemberPrincipal;
+import com.project.todo.domain.model.member.MemberHolder;
 import com.project.todo.repository.member.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -29,11 +29,11 @@ public class CustomOidcUserService extends AbstractOAuthUserService implements O
         OidcUser oidcUser = oidcUserService.loadUser(userRequest);
 
         MemberAuthenticationFactoryForm form = MemberAuthenticationFactoryForm.createOAuthMemberForm(oidcUser, clientRegistration);
-        MemberPrincipal memberPrincipal = super.getMemberPrincipal(form);
+        MemberHolder memberHolder = super.getMemberPrincipal(form);
 
-        super.processSave(memberPrincipal);
+        super.processSave(memberHolder);
 
-        return new MemberAuthentication(memberPrincipal);
+        return new MemberPrincipal(memberHolder);
 
     }
 }
