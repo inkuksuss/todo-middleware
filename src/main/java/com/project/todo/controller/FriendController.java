@@ -1,27 +1,23 @@
 package com.project.todo.controller;
 
 import com.project.todo.config.argument_resolver.annotation.LoginId;
-import com.project.todo.domain.condition.FriendSearchCond;
-import com.project.todo.domain.dto.FriendDetailDto;
-import com.project.todo.domain.dto.MemberContext;
-import com.project.todo.domain.dto.PageDto;
-import com.project.todo.domain.dto.UpdateFriendDto;
-import com.project.todo.domain.request.friend.AddFriendRequest;
-import com.project.todo.domain.request.friend.FriendSearchRequest;
-import com.project.todo.domain.request.friend.UpdateFriendRequest;
-import com.project.todo.domain.response.common.ResponsePageResult;
-import com.project.todo.domain.response.common.ResponseResult;
+import com.project.todo.repository.condition.FriendSearchCond;
+import com.project.todo.service.dto.friend.FriendDetailDto;
+import com.project.todo.service.dto.PageDto;
+import com.project.todo.service.dto.friend.UpdateFriendDto;
+import com.project.todo.controller.request.friend.AddFriendRequest;
+import com.project.todo.controller.request.friend.FriendSearchRequest;
+import com.project.todo.controller.request.friend.UpdateFriendRequest;
+import com.project.todo.controller.response.common.ResponsePageResult;
+import com.project.todo.controller.response.common.ResponseResult;
 import com.project.todo.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -62,7 +58,7 @@ public class FriendController {
      * @throws IllegalArgumentException when request state is not support
      * @throws IllegalStateException when modifier and sender is same or invalid friend state
      */
-    @PatchMapping("/{friendId}")
+    @PostMapping("/update/{friendId}")
     public ResponseEntity<ResponseResult<Long>> updateFriend(
             @RequestBody @Validated UpdateFriendRequest request,
             @PathVariable Long friendId,
@@ -89,7 +85,7 @@ public class FriendController {
      * @throws NoSuchElementException if not found todo to delete
      * @throws IllegalArgumentException when modifier id or friend id is null
      */
-    @DeleteMapping("/{friendId}")
+    @PostMapping("/delete/{friendId}")
     public ResponseEntity<ResponseResult<Void>> deleteFriend(
             @PathVariable Long friendId,
             @LoginId Long memberId

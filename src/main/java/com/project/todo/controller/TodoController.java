@@ -1,15 +1,20 @@
 package com.project.todo.controller;
 
 import com.project.todo.config.argument_resolver.annotation.LoginId;
-import com.project.todo.domain.dto.TodoDto;
-import com.project.todo.domain.request.todo.AddTodoRequest;
-import com.project.todo.domain.request.todo.UpdateTodoRequest;
-import com.project.todo.domain.response.common.ResponseResult;
+import com.project.todo.service.dto.PageDto;
+import com.project.todo.service.dto.todo.TodoSearchDto;
+import com.project.todo.service.dto.todo.TodoDto;
+import com.project.todo.controller.request.todo.AddTodoRequest;
+import com.project.todo.controller.request.todo.UpdateTodoRequest;
+import com.project.todo.controller.response.common.ResponseResult;
 import com.project.todo.domain.types.RESPONSE_CODE;
 import com.project.todo.domain.types.TODO_TYPE;
 import com.project.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -65,7 +70,7 @@ public class TodoController {
      * @throws IllegalArgumentException when memberId is null
      * @throws UsernameNotFoundException when cannot find memberId which is todo owner
      */
-    @PatchMapping("/{todoId}")
+    @PostMapping("/update/{todoId}")
     public ResponseEntity<ResponseResult<Long>> updateTodo(
             @RequestBody @Validated UpdateTodoRequest request,
             @PathVariable Long todoId,
@@ -102,7 +107,7 @@ public class TodoController {
      *
      * @throws NoSuchElementException if not found todo to delete
      */
-    @DeleteMapping("/{todoId}")
+    @PostMapping("/delete/{todoId}")
     public ResponseEntity<ResponseResult<Void>> deleteTodo(
             @PathVariable Long todoId,
             @LoginId Long memberId
@@ -119,5 +124,30 @@ public class TodoController {
         todoService.removeTodoOne(memberId, todoId);
 
         return new ResponseEntity<>(new ResponseResult<>(), HttpStatus.OK);
+    }
+
+    @GetMapping("/my/todo-list")
+    public void getTodoList(
+            @RequestParam(required = false) String todoTitle,
+            @RequestParam(required = false) String isComplete,
+            @RequestParam Long targetId,
+            @PageableDefault(size = 20, sort = "updated", direction = Sort.Direction.DESC) Pageable pageable,
+            @LoginId Long memberId) {
+        TodoSearchDto dto = new TodoSearchDto();
+        dto.setMemberId(targetId);
+        dto.setRequestMemberId(memberId);
+        dto.setTodoTitle(todoTitle);
+        dto.setIsComplete(isComplete);
+
+        PageDto<TodoDto> todoListOfMember = todoService.getTodoListOfMember(dto, pageable);
+
+
+//        return new ResponseEntity<>()re
+    }
+
+    @PostMapping("/todo-list")
+    public void getTodoList(@RequestBody TodoSearchRequest request) {
+
+//        return new ResponseEntity<>()
     }
 }

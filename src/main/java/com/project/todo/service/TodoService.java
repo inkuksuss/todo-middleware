@@ -1,13 +1,19 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.TodoDto;
+import com.project.todo.repository.condition.TodoSearchCond;
+import com.project.todo.service.dto.todo.TodoSearchDto;
+import com.project.todo.service.dto.PageDto;
+import com.project.todo.service.dto.todo.TodoDto;
+import com.project.todo.domain.types.RELATIONSHIP_TYPE;
 import com.project.todo.domain.types.TODO_TYPE;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.entity.Todo;
+import com.project.todo.repository.friend.FriendRepository;
 import com.project.todo.repository.member.MemberRepository;
 import com.project.todo.repository.todo.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +30,7 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
     private final MemberRepository memberRepository;
+    private final FriendRepository friendRepository;
 
     @Transactional
     public TodoDto saveTodo(TodoDto todoDto) {
@@ -86,11 +93,44 @@ public class TodoService {
         }
     }
 
+    public PageDto<TodoDto> getTodoListOfMember(TodoSearchDto dto, Pageable pageable) {
+        RELATIONSHIP_TYPE type = determineRelationship(dto.getMemberId(), dto.getRequestMemberId());
+
+        TodoSearchCond cond = new TodoSearchCond();
+        cond.setTodoTitle(dto.getTodoTitle());
+        cond.setIsComplete(dto.getIsComplete());
+        cond.setType(type);
+
+
+        todoRepository.findTodoListOfMember(cond, pageable);
+    }
+
+    public PageDto<TodoDto> getSearchTodoList(TodoSearchDto cond) {
+
+        // memberid
+
+
+    }
+
     public TodoDto findTodo(Long id) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
 
         return TodoDto.fromEntity(todo);
+    }
+
+    private RELATIONSHIP_TYPE determineRelationship(Long targetId, Long requestId) {
+        if (requestId != null && requestId.equals(targetId)) {
+            return RELATIONSHIP_TYPE.ME;
+        }
+
+        if (requestId != null && targetId != null) {
+            return friendRepository.checkIsFriend(requestId, targetId)
+                    .map(v -> RELATIONSHIP_TYPE.FRIEND)
+                    .orElse(RELATIONSHIP_TYPE.NONE);
+        }
+
+        return RELATIONSHIP_TYPE.NONE;
     }
 
     private Member validMember(TodoDto todoDto) {

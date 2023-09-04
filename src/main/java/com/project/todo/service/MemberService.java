@@ -1,9 +1,9 @@
 package com.project.todo.service;
 
 import com.project.todo.config.security.provider.JwtTokenProvider;
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.condition.MemberSearchCond;
-import com.project.todo.domain.dto.PageDto;
+import com.project.todo.service.dto.member.MemberDto;
+import com.project.todo.repository.condition.MemberSearchCond;
+import com.project.todo.service.dto.PageDto;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.exception.DuplicateEmailException;

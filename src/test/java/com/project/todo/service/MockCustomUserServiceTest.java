@@ -1,7 +1,6 @@
 package com.project.todo.service;
 
 import com.project.todo.config.security.provider.JwtTokenProvider;
-import com.project.todo.domain.dto.MemberContext;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.repository.member.MemberRepository;

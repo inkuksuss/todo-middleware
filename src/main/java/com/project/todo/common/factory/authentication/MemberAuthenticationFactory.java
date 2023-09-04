@@ -1,7 +1,7 @@
 package com.project.todo.common.factory.authentication;
 
 import com.project.todo.common.converter.DelegatingMemberPrincipalConverter;
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.service.dto.member.MemberDto;
 import com.project.todo.domain.model.member.GoogleMember;
 import com.project.todo.domain.model.member.NaverMember;
 import com.project.todo.domain.model.member.MemberHolder;

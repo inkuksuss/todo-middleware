@@ -1,6 +1,6 @@
 package com.project.todo.repository.member;
 
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.service.dto.member.MemberDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

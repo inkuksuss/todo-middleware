@@ -1,6 +1,6 @@
 package com.project.todo.repository.friend;
 
-import com.project.todo.domain.dto.FriendSimpleDynamicDto;
+import com.project.todo.service.dto.friend.FriendSimpleDynamicDto;
 import com.project.todo.domain.entity.Friend;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

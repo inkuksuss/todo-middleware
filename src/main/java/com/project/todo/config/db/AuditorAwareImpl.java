@@ -1,6 +1,5 @@
 package com.project.todo.config.db;
 
-import com.project.todo.domain.dto.MemberContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

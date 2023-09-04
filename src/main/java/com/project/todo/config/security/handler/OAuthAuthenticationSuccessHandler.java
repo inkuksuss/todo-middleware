@@ -2,7 +2,7 @@ package com.project.todo.config.security.handler;
 
 import com.project.todo.common.utils.URLUtils;
 import com.project.todo.config.security.provider.JwtTokenProvider;
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.service.dto.member.MemberDto;
 import com.project.todo.domain.model.member.MemberPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

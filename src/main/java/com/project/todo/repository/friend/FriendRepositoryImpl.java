@@ -1,18 +1,16 @@
 package com.project.todo.repository.friend;
 
-import com.project.todo.domain.condition.FriendSearchCond;
-import com.project.todo.domain.dto.FriendDetailDto;
-import com.project.todo.domain.dto.FriendSimpleDynamicDto;
+import com.project.todo.repository.condition.FriendSearchCond;
+import com.project.todo.service.dto.friend.FriendDetailDto;
+import com.project.todo.service.dto.friend.FriendSimpleDynamicDto;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.QMember;
 import com.project.todo.domain.types.FRIEND_TYPE;
-import com.project.todo.domain.types.MEMBER_TYPE;
 import com.project.todo.domain.types.REQUEST_STATE;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

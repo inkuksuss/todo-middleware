@@ -1,12 +1,7 @@
 package com.project.todo.common.converter;
 
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactoryForm;
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.types.LOGIN_PROVIDER;
-import com.project.todo.domain.types.MEMBER_TYPE;
-import org.springframework.util.StringUtils;
-
-import java.util.Map;
+import com.project.todo.service.dto.member.MemberDto;
 
 public class TodoMemberPrincipalConverter implements MemberPrincipalConverter {
 

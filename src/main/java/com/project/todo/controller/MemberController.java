@@ -1,16 +1,15 @@
 package com.project.todo.controller;
 
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.condition.MemberSearchCond;
-import com.project.todo.domain.dto.PageDto;
+import com.project.todo.service.dto.member.MemberDto;
+import com.project.todo.repository.condition.MemberSearchCond;
+import com.project.todo.service.dto.PageDto;
 import com.project.todo.domain.model.member.MemberPrincipal;
-import com.project.todo.domain.request.member.JoinRequest;
-import com.project.todo.domain.request.member.LoginRequest;
-import com.project.todo.domain.request.member.MemberSearchRequest;
-import com.project.todo.domain.response.MemberDetailResponse;
-import com.project.todo.domain.response.common.ResponsePageResult;
-import com.project.todo.domain.response.common.ResponseResult;
-import com.project.todo.domain.types.RESPONSE_CODE;
+import com.project.todo.controller.request.member.JoinRequest;
+import com.project.todo.controller.request.member.LoginRequest;
+import com.project.todo.controller.request.member.MemberSearchRequest;
+import com.project.todo.controller.response.member.MemberDetail;
+import com.project.todo.controller.response.common.ResponsePageResult;
+import com.project.todo.controller.response.common.ResponseResult;
 import com.project.todo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +34,11 @@ public class MemberController {
      */
 
     @GetMapping("/info")
-    public ResponseEntity<ResponseResult<MemberDetailResponse>> getMemberInfo (Authentication authentication) {
+    public ResponseEntity<ResponseResult<MemberDetail>> getMemberInfo (Authentication authentication) {
         MemberPrincipal principal = (MemberPrincipal) authentication.getPrincipal();
         MemberDto member = principal.getMember();
 
-        MemberDetailResponse response = new MemberDetailResponse();
+        MemberDetail response = new MemberDetail();
         response.setId(member.getId());
         response.setName(member.getName());
         response.setEmail(member.getEmail());
@@ -52,12 +51,12 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseResult<MemberDetailResponse>> login(@Validated @RequestBody LoginRequest request) {
+    public ResponseEntity<ResponseResult<MemberDetail>> login(@Validated @RequestBody LoginRequest request) {
 
         MemberDto loginMember = memberService.doLogin(request.getEmail(), request.getPassword());
 
         // create response
-        MemberDetailResponse response = new MemberDetailResponse();
+        MemberDetail response = new MemberDetail();
         response.setId(loginMember.getId());
         response.setName(loginMember.getName());
         response.setEmail(loginMember.getEmail());

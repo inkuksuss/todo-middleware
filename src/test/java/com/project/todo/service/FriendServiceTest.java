@@ -1,7 +1,12 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.condition.FriendSearchCond;
+import com.project.todo.repository.condition.FriendSearchCond;
 import com.project.todo.domain.dto.*;
+import com.project.todo.service.dto.PageDto;
+import com.project.todo.service.dto.friend.FriendDetailDto;
+import com.project.todo.service.dto.friend.FriendSimpleDynamicDto;
+import com.project.todo.service.dto.friend.UpdateFriendDto;
+import com.project.todo.service.dto.member.MemberDto;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.FRIEND_TYPE;

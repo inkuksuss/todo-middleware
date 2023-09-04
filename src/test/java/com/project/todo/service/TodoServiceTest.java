@@ -1,7 +1,7 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.dto.TodoDto;
+import com.project.todo.service.dto.member.MemberDto;
+import com.project.todo.service.dto.todo.TodoDto;
 import com.project.todo.domain.types.TODO_TYPE;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +9,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;

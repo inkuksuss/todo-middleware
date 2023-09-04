@@ -9,13 +9,15 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @SQLDelete(sql = "UPDATE todo SET is_delete = false WHERE todo_id = ?")
 @Where(clause = "is_delete = 'N'")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = "member")
-public class Todo extends BaseEntity {
+public class Todo extends BaseEntity implements Serializable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TODO_ID")
@@ -30,9 +32,16 @@ public class Todo extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(nullable = false, length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
+    private String isComplete;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
+    @OneToOne
+
+    private Long creatorId;
 
     public Todo(Long id) {
         this.id = id;
@@ -68,4 +77,7 @@ public class Todo extends BaseEntity {
         this.content = content;
     }
 
+    public void setIsComplete(String isComplete) {
+        this.isComplete = isComplete;
+    }
 }

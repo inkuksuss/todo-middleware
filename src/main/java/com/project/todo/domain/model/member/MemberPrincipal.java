@@ -1,6 +1,6 @@
 package com.project.todo.domain.model.member;
 
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.service.dto.member.MemberDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;

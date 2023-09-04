@@ -1,6 +1,6 @@
 package com.project.todo.service;
 
-import com.project.todo.domain.dto.UpdateFriendDto;
+import com.project.todo.service.dto.friend.UpdateFriendDto;
 import com.project.todo.domain.entity.Friend;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.types.MEMBER_TYPE;

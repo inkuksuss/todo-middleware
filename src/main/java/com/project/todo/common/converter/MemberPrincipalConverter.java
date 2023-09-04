@@ -1,7 +1,7 @@
 package com.project.todo.common.converter;
 
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactoryForm;
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.service.dto.member.MemberDto;
 
 import java.util.UUID;
 

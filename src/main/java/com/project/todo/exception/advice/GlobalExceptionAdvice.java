@@ -2,7 +2,7 @@ package com.project.todo.exception.advice;
 
 
 import com.project.todo.domain.types.RESPONSE_CODE;
-import com.project.todo.domain.response.common.ResponseResult;
+import com.project.todo.controller.response.common.ResponseResult;
 import com.project.todo.exception.DuplicateEmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;

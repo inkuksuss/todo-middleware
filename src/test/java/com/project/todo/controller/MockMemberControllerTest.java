@@ -3,12 +3,12 @@ package com.project.todo.controller;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.project.todo.domain.dto.MemberDto;
-import com.project.todo.domain.request.member.JoinRequest;
-import com.project.todo.domain.request.member.LoginRequest;
-import com.project.todo.domain.response.MemberDetailResponse;
+import com.project.todo.service.dto.member.MemberDto;
+import com.project.todo.controller.request.member.JoinRequest;
+import com.project.todo.controller.request.member.LoginRequest;
+import com.project.todo.controller.response.member.MemberDetail;
 import com.project.todo.domain.types.RESPONSE_CODE;
-import com.project.todo.domain.response.common.ResponseResult;
+import com.project.todo.controller.response.common.ResponseResult;
 import com.project.todo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,8 +152,8 @@ class MockMemberControllerTest {
 //                        .andDo(print());
 
         String  contentAsString = resultActions.andReturn().getResponse().getContentAsString();
-        JavaType returnType = this.objectMapper.getTypeFactory().constructParametricType(ResponseResult.class, MemberDetailResponse.class);
-        ResponseResult<MemberDetailResponse> result = this.objectMapper.readValue(contentAsString, returnType);
+        JavaType returnType = this.objectMapper.getTypeFactory().constructParametricType(ResponseResult.class, MemberDetail.class);
+        ResponseResult<MemberDetail> result = this.objectMapper.readValue(contentAsString, returnType);
         log.info(" result = {}", result.toString());
 
         assertThat(result.getCode()).isEqualTo(RESPONSE_CODE.SUCCESS.getCode());

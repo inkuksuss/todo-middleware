@@ -3,10 +3,10 @@ package com.project.todo.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.project.todo.domain.request.member.JoinRequest;
-import com.project.todo.domain.request.member.LoginRequest;
-import com.project.todo.domain.response.MemberDetailResponse;
-import com.project.todo.domain.response.common.ResponseResult;
+import com.project.todo.controller.request.member.JoinRequest;
+import com.project.todo.controller.request.member.LoginRequest;
+import com.project.todo.controller.response.member.MemberDetail;
+import com.project.todo.controller.response.common.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -77,7 +77,7 @@ class MemberControllerTest {
         LoginRequest testData = new LoginRequest( "asd@naver.com", "1111");
         ResponseEntity<ResponseResult> response = this.restTemplate.postForEntity("http://localhost:" + port + prefix + requestUrl, testData, ResponseResult.class);
 
-        MemberDetailResponse responseData = objectMapper.convertValue(response.getBody().getData(), MemberDetailResponse.class);
+        MemberDetail responseData = objectMapper.convertValue(response.getBody().getData(), MemberDetail.class);
         Assertions.assertThat(response.getBody().getCode()).isEqualTo(0);
         Assertions.assertThat(responseData.getToken()).isNotNull();
     }

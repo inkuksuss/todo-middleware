@@ -1,7 +1,7 @@
 package com.project.todo.service.security.oauth2;
 
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactoryForm;
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.service.dto.member.MemberDto;
 import com.project.todo.domain.entity.Member;
 import com.project.todo.domain.model.member.MemberHolder;
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactory;

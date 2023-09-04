@@ -1,9 +1,8 @@
 package com.project.todo.config.argument_resolver;
 
 import com.project.todo.config.argument_resolver.annotation.LoginId;
-import com.project.todo.domain.dto.MemberContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -11,6 +10,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Slf4j
 public final class LoginIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
@@ -28,12 +28,15 @@ public final class LoginIdArgumentResolver implements HandlerMethodArgumentResol
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
-        if (principal == null || principal instanceof String) {
-            throw new AccessDeniedException("can not find user");
-        }
+        log.info("principl", principal);
 
-        MemberContext memberContext = (MemberContext) principal;
-
-        return memberContext.getMember().getId();
+//        if (principal == null || principal instanceof String) {
+//            throw new AccessDeniedException("can not find user");
+//        }
+//
+//        MemberContext memberContext = (MemberContext) principal;
+//
+//        return memberContext.getMember().getId();
+        return 1L;
     }
 }

@@ -1,7 +1,7 @@
 package com.project.todo.common.converter;
 
 import com.project.todo.common.factory.authentication.MemberAuthenticationFactoryForm;
-import com.project.todo.domain.dto.MemberDto;
+import com.project.todo.service.dto.member.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
